@@ -1,0 +1,426 @@
+.products {
+  padding: 6rem 4rem;
+  background: var(--bg-primary);
+  position: relative;
+}
+
+.products-container {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 6rem 4rem;
+}
+
+.product-card {
+  background: var(--bg-primary);
+  border: none;
+  overflow: hidden;
+  transition: transform 0.4s ease;
+  cursor: pointer;
+  position: relative;
+  /* ❌ Will-change on all cards (designer wanted buttery-smooth animations) */
+  /* will-change: transform; */
+  /* ❌ Start invisible for animation - causes layout shift */
+  opacity: 1;
+  transform: translateY(50px);
+}
+
+/* ❌ PROBLEM 4: Expensive hover causes this to feel janky */
+.product-card:hover {
+  /* transform: translateY(-8px); */
+}
+
+.product-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-tertiary);
+  aspect-ratio: 0.8;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.03);
+}
+
+.product-info {
+  padding: 2.5rem 0;
+  text-align: center;
+}
+
+.product-name {
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
+  color: var(--color-primary);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.product-price {
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--color-accent);
+  letter-spacing: 0.05em;
+}
+
+/* Product Image Container & Overlay */
+.product-image-container {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-tertiary);
+  aspect-ratio: 4 / 5;
+}
+
+.product-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.product-card:hover .product-overlay {
+  opacity: 1;
+}
+
+.product-quick-view {
+  padding: 0.875rem 2rem;
+  background: white;
+  color: var(--color-primary);
+  border: none;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+
+.product-quick-view:hover {
+  background: var(--color-accent);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.product-cta {
+  padding: 0.75rem 1.5rem;
+  background: var(--color-primary);
+  color: white;
+  border: 1px solid var(--color-primary);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  margin-top: 1rem;
+}
+
+.product-cta:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+.product-cta:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Wishlist Heart Icon (Problem #4 - demonstrates late-loading feature) */
+.wishlist-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 100;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  /* ❌ Initially invisible - appears AFTER API fetch completes */
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.wishlist-icon.loaded {
+  animation: wishlistFadeIn 0.3s ease forwards;
+}
+
+@keyframes wishlistFadeIn {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.wishlist-icon:hover {
+  background: var(--color-accent);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.wishlist-icon svg {
+  width: 24px;
+  height: 24px;
+  transition: all 0.2s ease;
+}
+
+.wishlist-icon:hover svg {
+  fill: white;
+  stroke: white;
+}
+
+.wishlist-icon.active svg {
+  fill: #ef4444;
+  stroke: #ef4444;
+}
+
+/* Section Title */
+.section-title {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 5rem;
+  color: var(--color-primary);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 768px) {
+  .products {
+    padding: 8rem 2rem;
+  }
+
+  .product-grid {
+    grid-template-columns: 1fr;
+    gap: 5rem;
+  }
+
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  /* Mobile: Show overlay buttons in 2-column layout below image */
+  .product-overlay {
+    position: static;
+    background: transparent;
+    backdrop-filter: none;
+    opacity: 1;
+    display: block;
+    padding: 1rem 0 0 0;
+  }
+
+  .product-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "name name"
+      "price price"
+      "quickview addtocart";
+    gap: 0.75rem;
+    padding: 1.5rem 0;
+    text-align: center;
+  }
+
+  .product-name {
+    grid-area: name;
+  }
+
+  .product-price {
+    grid-area: price;
+    margin-bottom: 0.5rem;
+  }
+
+  .product-quick-view {
+    grid-area: quickview;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    width: 100%;
+  }
+
+  .product-cta {
+    grid-area: addtocart;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    margin-top: 0;
+    width: 100%;
+  }
+
+  /* Hide wishlist icon on mobile (no hover interaction) */
+  .wishlist-icon {
+    display: none;
+  }
+}
+
+/* ====================================================================
+   Marketing Tag Manager Banner (Problem #2)
+   Injected dynamically by Marketing via Tag Manager simulation
+   ==================================================================== */
+
+.marketing-promo-banner {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  padding: 1.5rem 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 6rem;
+  border-radius: 8px;
+
+  /* ❌ PROBLEM: No height reservation before injection
+     When injected at 2s mark, pushes all content down ~120px
+     CLS Impact: +0.28 from this banner alone
+     Total site CLS: 0.08 → 0.36 (made worse!)
+
+     Context: Marketing deployed via Tag Manager to boost Q3 sales
+     Result: Banner CTR 8%, but bounce +12% = net negative -4%
+     Revenue impact: -R87k/week, 3 weeks until Black Friday */
+}
+
+.promo-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.promo-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.promo-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.promo-text strong {
+  font-size: 1.25rem;
+  color: var(--color-primary);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.promo-text span {
+  font-size: 0.95rem;
+  color: var(--color-secondary);
+  opacity: 0.9;
+}
+
+.promo-cta {
+  padding: 0.75rem 1.5rem;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  letter-spacing: 0.02em;
+}
+
+.promo-cta:hover {
+  transform: translateY(-1px);
+  background: var(--color-secondary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.promo-close {
+  width: 32px;
+  height: 32px;
+  background: rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 4px;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s;
+  color: var(--color-primary);
+}
+
+.promo-close:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* ✅ FIX: Reserved space skeleton (commented out for demo)
+   Uncomment to fix CLS issue - reserves space before banner loads
+
+.promo-banner-skeleton {
+  height: 120px;
+  background: rgba(251, 191, 36, 0.05);
+  margin-bottom: 3rem;
+  border-radius: 8px;
+  display: block;
+}
+
+When skeleton is used, modify tagManager.js to replace it:
+const skeleton = document.querySelector('.promo-banner-skeleton');
+if (skeleton) skeleton.replaceWith(banner);
+
+Result: CLS 0.36 → 0.08 (removes 0.28 from banner) ✅
+*/
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .marketing-promo-banner {
+    padding: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .promo-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .promo-text {
+    align-items: center;
+  }
+
+  .promo-text strong {
+    font-size: 1.125rem;
+  }
+
+  .promo-text span {
+    font-size: 0.875rem;
+  }
+
+  .promo-cta {
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+  }
+
+  .promo-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+}

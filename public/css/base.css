@@ -1,0 +1,107 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Neon colors */
+  --neon-pink: #FF006B;
+  --neon-cyan: #00F0FF;
+  --neon-purple: #9D00FF;
+  --neon-yellow: #FFE600;
+
+  /* Dark backgrounds */
+  --bg-dark: #0a0a0a;
+  --bg-darker: #050505;
+  --bg-card: rgba(20, 20, 40, 0.6);
+
+  /* Typography */
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-dark);
+  color: #ffffff;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Film grain texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.05"/></svg>');
+  pointer-events: none;
+  z-index: 9999;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+.section-title {
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 4rem;
+  background: linear-gradient(135deg, var(--neon-pink), var(--neon-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 30px rgba(255, 0, 107, 0.5);
+}
+
+/* Navigation */
+.nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255, 0, 107, 0.3);
+}
+
+.nav-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  background: linear-gradient(135deg, var(--neon-pink), var(--neon-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: 3rem;
+}
+
+.nav-menu a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav-menu a:hover {
+  color: var(--neon-cyan);
+}
