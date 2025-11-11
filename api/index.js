@@ -1,20 +1,59 @@
 import { Hono } from 'hono';
 import { handle } from 'hono/vercel';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 
 const app = new Hono().basePath('/api');
 
-// Load products data
-let products;
-try {
-  // Vercel deploys everything to the root, so we can access public/data directly
-  const productsPath = join(process.cwd(), 'public', 'data', 'products.json');
-  products = JSON.parse(readFileSync(productsPath, 'utf-8'));
-} catch (error) {
-  console.error('Failed to load products:', error);
-  products = [];
-}
+// Products data - inlined for Vercel serverless compatibility
+const products = [
+  {
+    id: 1,
+    name: "Meridian Wireless Audio",
+    price: "R12 999",
+    image: "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=1200&q=85",
+    alt: "Premium wireless headphones on marble surface",
+    inWishlist: false
+  },
+  {
+    id: 2,
+    name: "Chronograph Series V",
+    price: "R17 999",
+    image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=1200&q=85",
+    alt: "Luxury smartwatch in minimal setting",
+    inWishlist: false
+  },
+  {
+    id: 3,
+    name: "Soleil Eyewear",
+    price: "R8 499",
+    image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=1200&q=85",
+    alt: "Designer sunglasses with sophisticated styling",
+    inWishlist: true
+  },
+  {
+    id: 4,
+    name: "Atelier Camera Pro",
+    price: "R49 999",
+    image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=1200&q=85",
+    alt: "Professional camera in design studio",
+    inWishlist: false
+  },
+  {
+    id: 5,
+    name: "Resonance Speaker",
+    price: "R10 999",
+    image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=1200&q=85",
+    alt: "Premium speaker in modern living space",
+    inWishlist: false
+  },
+  {
+    id: 6,
+    name: "Studio Notebook",
+    price: "R64 999",
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=1200&q=85",
+    alt: "Premium laptop in curated workspace",
+    inWishlist: false
+  }
+];
 
 // Artificial delay helper
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
