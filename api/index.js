@@ -1,8 +1,20 @@
 import { Hono } from 'hono';
 import { handle } from 'hono/vercel';
-import products from '../public/data/products.json' assert { type: 'json' };
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 const app = new Hono().basePath('/api');
+
+// Load products data
+let products;
+try {
+  // Vercel deploys everything to the root, so we can access public/data directly
+  const productsPath = join(process.cwd(), 'public', 'data', 'products.json');
+  products = JSON.parse(readFileSync(productsPath, 'utf-8'));
+} catch (error) {
+  console.error('Failed to load products:', error);
+  products = [];
+}
 
 // Artificial delay helper
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
