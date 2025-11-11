@@ -419,7 +419,7 @@ export function initProductHover() {
         const productId = index + 1;
 
         // ❌ BAD: Unthrottled fetch on EVERY hover
-        const response = await fetch(`http://localhost:3000/api/products/${productId}`);
+        const response = await fetch(`/api/products/${productId}`);
         const product = await response.json();
 
         // ❌ RACE CONDITION FIX: Check if still hovering after fetch completes

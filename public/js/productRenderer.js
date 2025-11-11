@@ -23,7 +23,7 @@ export async function renderProducts() {
     console.log('📦 Fetching products from API...');
 
     // Fetch products from our Hono server
-    const response = await fetch('http://localhost:3000/api/products');
+    const response = await fetch('/api/products');
     const products = await response.json();
 
     console.log(`✅ Loaded ${products.length} products`);
@@ -173,7 +173,7 @@ function performExpensiveCalculation() {
  *
  * export async function renderProducts() {
  *   try {
- *     const response = await fetch('http://localhost:3000/api/products');
+ *     const response = await fetch('/api/products');
  *     const products = await response.json();
  *
  *     const productGrid = document.querySelector('.product-grid');
