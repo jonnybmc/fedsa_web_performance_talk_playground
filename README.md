@@ -2,11 +2,11 @@
 
 **A 20-minute live debugging demo for frontend engineering conferences**
 
-Repository for the talk "Stop Guessing, Start Measuring: A Primer on Debugging Web Performance" - featuring the story of "Atelier", a premium African tech retailer whose R3.5M redesign became a performance disaster.
+Repository for the talk "Stop Guessing, Start Measuring: A Primer on Debugging Web Performance" - featuring the story of "TechMart", an affordable African tech retailer whose R3.5M redesign became a performance disaster.
 
 ---
 
-## 📖 The Story: "Atelier" - The R3.5M Redesign Disaster
+## 📖 The Story: "TechMart" - The R3.5M Redesign Disaster
 
 ### Timeline
 
@@ -89,7 +89,7 @@ Internal Slack #general:
 **[Week 2 post-launch...]**
 
 User (Twitter, Cape Town, 14Mbps):
-*"Why does @Atelier homepage take 30 seconds to load? Just seeing blank white screen..."*
+*"Why does @TechMart homepage take 30 seconds to load? Just seeing blank white screen..."*
 
 User (Lagos, mobile 4G):
 *"Gorgeous site but takes FOREVER to load. Old site was way faster."*
@@ -454,7 +454,7 @@ function initPremiumDepthShader() {
 **[Week 2 post-launch, Twitter explodes...]**
 
 User:
-*"Why does @Atelier feel so laggy? Hovering over products is painful."*
+*"Why does @TechMart feel so laggy? Hovering over products is painful."*
 
 **Performance Consultant** (DevTools Performance Panel):
 *"Every hover triggers: Unthrottled API fetch (network spam), querySelectorAll('.product-card') - queries entire DOM, DOM manipulation forcing layout recalculation. Result: INP 620ms. Target is <200ms. Users feel frozen interface."*
@@ -753,7 +753,7 @@ Also update `public/js/productRenderer.js` to render wishlist icon immediately (
 ## 🎬 Live Demo Guide (20-Minute Talk Structure)
 
 ### Part 1: Setup & Context (3 minutes)
-1. Tell the Atelier story (R3.5M redesign disaster)
+1. Tell the TechMart story (R3.5M redesign disaster)
 2. Show the live site - looks beautiful but...
 3. Run Lighthouse: **Score 28/100** ❌
 
@@ -992,7 +992,7 @@ onLCP((metric) => {
 
 **Step 1: Create GA4 Property**
 1. Go to https://analytics.google.com/
-2. Create new property: "Atelier Performance Monitoring"
+2. Create new property: "TechMart Performance Monitoring"
 3. Get your Measurement ID (format: `G-XXXXXXXXXX`)
 
 **Step 2: Add Measurement ID**
