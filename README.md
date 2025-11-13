@@ -1173,6 +1173,204 @@ git push origin feature/product-zoom
 - Reduce TTFB: Optimize server response time
 - Remove render-blocking resources above fold
 
+### 8. Advanced Lighthouse CLI (Custom Throttling)
+
+The Lighthouse CLI provides more granular control over network and CPU throttling than the DevTools UI. This project includes **5 custom configurations**: one simulating the "developer machine" scenario (unthrottled) and four tailored to **African network conditions** for realistic performance testing.
+
+**Why use CLI over DevTools?**
+- DevTools Lighthouse has limited throttling presets (Mobile, Desktop)
+- CLI allows custom CPU multipliers (4x, 6x, 8x slowdown)
+- CLI allows custom network conditions (RTT, throughput)
+- CLI generates standalone HTML reports you can share with stakeholders
+- CLI enables batch testing across multiple scenarios
+
+#### Testing Configurations
+
+This demo includes 6 custom configs: one "developer machine" baseline, one budget consumer laptop, and 4 representing real African user scenarios.
+
+| Config | Scenario | Network | CPU | Device Example |
+|--------|----------|---------|-----|----------------|
+| **developer-machine.js** | ⚠️ "Works fine on my machine" | 100Mbps, 10ms RTT | No throttling | MacBook Pro M1/M2 (desktop) |
+| **consumer-laptop.js** | 💻 Budget consumer laptop | 30Mbps, 60ms RTT | 4.5x slowdown | Acer Aspire, Lenovo IdeaPad ($300-500) |
+| **african-urban.js** | Major cities (JHB, Lagos, Nairobi) | 15-20Mbps, 180ms RTT | 4x slowdown | Mid-tier Android (Galaxy A series) |
+| **african-suburban.js** | Townships, smaller cities | 8-12Mbps, 250ms RTT | 6x slowdown | Budget Android |
+| **african-rural.js** | Rural areas, remote locations | 2-5Mbps, 400ms RTT | 8x slowdown | Entry-level Android |
+| **african-best-case.js** | Premium fiber connections | 100Mbps, 40ms RTT | 1x (no throttling) | High-end Android/iPhone |
+
+**⚠️ Important:** The `developer-machine.js` config demonstrates **why the TechMart redesign failed**. It simulates testing on a MacBook Pro with fast office WiFi - the exact conditions that led to "works fine on my machine" syndrome.
+
+**💻 The Consumer Laptop Gap:** The `consumer-laptop.js` config reveals another blind spot - most consumers don't have MacBook Pros ($2000). They have budget Windows laptops from Best Buy/Takealot ($300-500). Businesses test on premium hardware and miss the 60%+ of desktop users browsing on Acer Aspire and Lenovo IdeaPad machines.
+
+#### Configuration Files
+
+All configs are in `lighthouse-configs/` directory. Each config exports a Lighthouse configuration object:
+
+```javascript
+// lighthouse-configs/african-urban.js
+export default {
+  extends: 'lighthouse:default',
+  settings: {
+    formFactor: 'mobile',
+    throttling: {
+      rttMs: 180,                    // Round-trip time
+      throughputKbps: 17500,         // 17.5 Mbps download
+      cpuSlowdownMultiplier: 4,      // 4x CPU slowdown
+      downloadThroughputKbps: 17500,
+      uploadThroughputKbps: 7500,
+    },
+    screenEmulation: {
+      mobile: true,
+      width: 360,
+      height: 640,
+      deviceScaleFactor: 2.625,
+    },
+    output: 'html',
+    onlyCategories: ['performance', 'accessibility', 'best-practices', 'seo'],
+  },
+};
+```
+
+#### Running Lighthouse CLI
+
+**Prerequisites:**
+```bash
+# Ensure server is running first
+npm start
+
+# In another terminal...
+```
+
+**Run individual configs:**
+```bash
+# Developer machine (unthrottled - MacBook Pro)
+npm run lighthouse:dev-machine
+
+# Consumer laptop (budget Windows laptop)
+npm run lighthouse:consumer-laptop
+
+# Urban conditions (15-20Mbps, 4x CPU)
+npm run lighthouse:urban
+
+# Suburban conditions (8-12Mbps, 6x CPU)
+npm run lighthouse:suburban
+
+# Rural conditions (2-5Mbps, 8x CPU)
+npm run lighthouse:rural
+
+# Best-case conditions (100Mbps, 1x CPU)
+npm run lighthouse:best-case
+```
+
+**Run all configs at once:**
+```bash
+npm run lighthouse:all
+```
+
+This runs all 6 configs sequentially and generates HTML reports for each.
+
+#### Viewing Reports
+
+Reports are saved to `lighthouse-reports/` (gitignored):
+
+```bash
+# Open reports in browser
+open lighthouse-reports/developer-machine.html
+open lighthouse-reports/consumer-laptop.html
+open lighthouse-reports/african-urban.html
+open lighthouse-reports/african-suburban.html
+open lighthouse-reports/african-rural.html
+open lighthouse-reports/african-best-case.html
+```
+
+Each report includes:
+- Performance score (0-100)
+- Core Web Vitals (LCP, CLS, INP)
+- Detailed diagnostics and opportunities
+- Network request waterfall
+- Screenshots of page load progression
+
+#### Use Cases
+
+**1. Demonstrating "Works Fine on My Machine" Problem**
+```bash
+# Run on developer machine (unthrottled MacBook Pro)
+npm run lighthouse:dev-machine
+# Score: 95/100 ✅ LCP: 1.2s
+
+# Run on consumer laptop (budget Windows)
+npm run lighthouse:consumer-laptop
+# Score: ~55/100 ⚠️ LCP: 2.8s
+
+# Run on rural African conditions (mobile)
+npm run lighthouse:rural
+# Score: 28/100 ❌ LCP: 8.2s
+```
+**The Gap:** Developer sees 95/100 and ships. Consumer laptop user sees 55/100. Mobile user sees 28/100 and bounces. This is exactly what happened to TechMart.
+
+**Teaching moment:** Even desktop users on consumer hardware struggle! It's not just a mobile problem.
+
+**2. Testing Performance Across Connectivity Spectrum**
+```bash
+npm run lighthouse:all
+```
+Compare scores across all 6 configs to understand how your site performs from premium hardware to budget devices to real African mobile user conditions.
+
+**3. Validating Fixes for Specific Regions**
+```bash
+# Before fix
+npm run lighthouse:rural
+# Score: 28/100, LCP: 8.2s
+
+# Apply fix...
+
+# After fix
+npm run lighthouse:rural
+# Score: 65/100, LCP: 2.8s
+```
+
+**4. Stakeholder Reports**
+Generate HTML reports to show executives/clients how site performs across the device spectrum:
+- "Here's our score on developer machines (MacBook Pro): 95/100 ✅"
+- "Here's our score on consumer laptops (most buyers): 55/100 ⚠️"
+- "Here's our score on 4G mobile (urban): 42/100 ❌"
+- "Here's our score on 3G mobile (rural): 28/100 ❌"
+- "60% of desktop users have consumer laptops, not MacBook Pros"
+- "We need to optimize for the devices people actually use"
+
+**5. Setting Realistic Performance Budgets**
+Use CLI results to set budgets based on your target users:
+- **80% urban users** → Set budgets based on `african-urban.js` results
+- **50% rural users** → Set budgets based on `african-rural.js` results
+- **Never** set budgets based on `developer-machine.js` results
+
+#### Customizing Configs
+
+Edit any config in `lighthouse-configs/` to match your target audience:
+
+```javascript
+// Example: Test for rural users with even slower 2G connection
+throttling: {
+  rttMs: 600,              // Very high latency
+  throughputKbps: 1500,    // 1.5 Mbps (2G speeds)
+  cpuSlowdownMultiplier: 10, // Very slow device
+}
+```
+
+#### CI/CD Integration (Advanced)
+
+You can integrate these custom configs into GitHub Actions:
+
+```yaml
+# .github/workflows/lighthouse-ci.yml
+- name: Run Lighthouse with custom throttling
+  run: |
+    npm run lighthouse:urban
+    npm run lighthouse:rural
+    # Upload reports as artifacts
+```
+
+This allows you to track performance across different connectivity scenarios over time.
+
 ---
 
 ## 📄 License

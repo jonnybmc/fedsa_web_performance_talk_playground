@@ -8,7 +8,14 @@
     "dev": "node --watch server.js",
     "lhci:collect": "lhci collect --url=http://localhost:3000",
     "lhci:assert": "lhci assert",
-    "lhci:upload": "lhci upload"
+    "lhci:upload": "lhci upload",
+    "lighthouse:dev-machine": "lighthouse http://localhost:3000 --config-path=./lighthouse-configs/developer-machine.js --output=html --output-path=./lighthouse-reports/developer-machine.html",
+    "lighthouse:consumer-laptop": "lighthouse http://localhost:3000 --config-path=./lighthouse-configs/consumer-laptop.js --output=html --output-path=./lighthouse-reports/consumer-laptop.html",
+    "lighthouse:urban": "lighthouse http://localhost:3000 --config-path=./lighthouse-configs/african-urban.js --output=html --output-path=./lighthouse-reports/african-urban.html",
+    "lighthouse:suburban": "lighthouse http://localhost:3000 --config-path=./lighthouse-configs/african-suburban.js --output=html --output-path=./lighthouse-reports/african-suburban.html",
+    "lighthouse:rural": "lighthouse http://localhost:3000 --config-path=./lighthouse-configs/african-rural.js --output=html --output-path=./lighthouse-reports/african-rural.html",
+    "lighthouse:best-case": "lighthouse http://localhost:3000 --config-path=./lighthouse-configs/african-best-case.js --output=html --output-path=./lighthouse-reports/african-best-case.html",
+    "lighthouse:all": "npm run lighthouse:dev-machine && npm run lighthouse:consumer-laptop && npm run lighthouse:urban && npm run lighthouse:suburban && npm run lighthouse:rural && npm run lighthouse:best-case"
   },
   "dependencies": {
     "@hono/node-server": "^1.19.6",
@@ -16,6 +23,7 @@
     "web-vitals": "^4.2.4"
   },
   "devDependencies": {
-    "@lhci/cli": "^0.13.0"
+    "@lhci/cli": "^0.13.0",
+    "lighthouse": "^12.8.2"
   }
 }

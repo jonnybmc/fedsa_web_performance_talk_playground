@@ -49,7 +49,8 @@ export async function renderProducts() {
 
       // Add a small artificial delay to make the blocking more visible
       // (Simulates complex business logic that junior devs often add)
-      performExpensiveCalculation();
+
+      // performExpensiveCalculation();
     });
 
     console.log('✅ Products rendered to DOM');
@@ -148,18 +149,18 @@ function createProductCard(product) {
  * Real-world example: complex price calculations, tax logic,
  * validation rules that junior devs put in the render loop
  */
-function performExpensiveCalculation() {
-  // Simulate ~10-20ms of blocking work per product
-  const start = performance.now();
-  let result = 0;
+// function performExpensiveCalculation() {
+//   // Simulate ~10-20ms of blocking work per product
+//   const start = performance.now();
+//   let result = 0;
 
-  // Do pointless math to waste CPU cycles
-  while (performance.now() - start < 15) {
-    result += Math.random() * Math.random();
-  }
+//   // Do pointless math to waste CPU cycles
+//   while (performance.now() - start < 15) {
+//     result += Math.random() * Math.random();
+//   }
 
-  return result;
-}
+//   return result;
+// }
 
 /**
  * ✅ FIXED VERSION (for live demo - keep commented):
