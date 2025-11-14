@@ -85,6 +85,7 @@ function createProductCard(product) {
         alt="${product.alt}"
         class="product-image"
         loading="lazy"
+        fetchpriority="low"
       >
       <div class="product-overlay">
         <button class="product-quick-view">Quick View</button>

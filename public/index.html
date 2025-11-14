@@ -168,8 +168,29 @@
   <!-- The 'defer' here has NO EFFECT and will be ignored by browsers -->
   <!-- <link rel="stylesheet" href="css/base.css"> -->
   <link rel="stylesheet" href="css/hero.css">
-  <link rel="preload" href="css/products.css" as "style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="css/products.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <link rel="preload" href="css/footer.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+  <!-- ✅ Preload hero images for LCP optimization -->
+  <!-- Preload base image (AVIF format with responsive srcset) -->
+  <link rel="preload" as="image"
+        fetchpriority="high"
+        imagesrcset="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=75&fm=avif 800w,
+                     https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=75&fm=avif 1200w,
+                     https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=75&fm=avif 1920w,
+                     https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=2560&q=75&fm=avif 2560w"
+        imagesizes="100vw"
+        type="image/avif">
+  
+  <!-- preload blend image -->
+  <link rel="preload" as="image"
+        fetchpriority="high"
+        imagesrcset="https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=800&q=75&fm=avif 800w,
+                     https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=1200&q=75&fm=avif 1200w,
+                     https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=1920&q=75&fm=avif 1920w,
+                     https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=2560&q=75&fm=avif 2560w"
+        imagesizes="100vw"
+        type="image/avif">
   <style>
     /* Reset and base styles */
 * {
@@ -418,6 +439,40 @@ h1, h2, h3, h4 {
 
   <!-- Hero Section -->
   <section class="hero">
+    <!-- Base image layer -->
+    <picture class="hero-bg-image hero-bg-base">
+      <source type="image/avif" srcset="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=75&fm=avif 800w,
+                   https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=75&fm=avif 1200w,
+                   https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=75&fm=avif 1920w,
+                   https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=2560&q=75&fm=avif 2560w" sizes="100vw">
+      <source type="image/webp" srcset="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=75&fm=webp 800w,
+                   https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=75&fm=webp 1200w,
+                   https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=75&fm=webp 1920w,
+                   https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=2560&q=75&fm=webp 2560w" sizes="100vw">
+      <source type="image/jpeg" srcset="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=75&fm=jpg 800w,
+                   https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=75&fm=jpg 1200w,
+                   https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=75&fm=jpg 1920w,
+                   https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=2560&q=75&fm=jpg 2560w" sizes="100vw">
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=75&fm=jpg" alt="" loading="eager">
+    </picture>
+
+    <!-- Blend layer -->
+    <picture class="hero-bg-image hero-bg-blend">
+      <source type="image/avif" srcset="https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=800&q=75&fm=avif 800w,
+                   https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=1200&q=75&fm=avif 1200w,
+                   https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=1920&q=75&fm=avif 1920w,
+                   https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=2560&q=75&fm=avif 2560w" sizes="100vw">
+      <source type="image/webp" srcset="https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=800&q=75&fm=webp 800w,
+                   https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=1200&q=75&fm=webp 1200w,
+                   https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=1920&q=75&fm=webp 1920w,
+                   https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=2560&q=75&fm=webp 2560w" sizes="100vw">
+      <source type="image/jpeg" srcset="https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=800&q=75&fm=jpg 800w,
+                   https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=1200&q=75&fm=jpg 1200w,
+                   https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=1920&q=75&fm=jpg 1920w,
+                   https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=2560&q=75&fm=jpg 2560w" sizes="100vw">
+      <img src="https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=1920&q=75&fm=jpg" alt="" loading="eager">
+    </picture>
+
     <div class="hero-content">
       <h1 class="hero-title">Quality Tech.<br>Affordable Prices.</h1>
       <p class="hero-subtitle">Reliable technology for everyday life across Africa</p>
