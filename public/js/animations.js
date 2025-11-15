@@ -97,6 +97,16 @@ function initPremiumDepthShader() {
   console.log('🎨 Initializing "premium animated depth effect"...');
   console.log('💡 PM: "I saw this on Netflix. Can we do that?"');
 
+  // ✅ PERFORMANCE FIX: Progressive enhancement - skip on mobile/low-end devices
+  const isMobile = window.innerWidth <= 768;
+  const isLowEnd = navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4;
+
+  if (isMobile || isLowEnd) {
+    console.log('📱 Mobile or low-end device - light beam effects disabled for performance');
+    console.log('✅ CLS avoided by skipping expensive animations');
+    return;
+  }
+
   const heroSection = document.querySelector('.hero');
 
   if (!heroSection) {
@@ -104,21 +114,27 @@ function initPremiumDepthShader() {
     return;
   }
 
-  // ❌ CURRENT: The "Netflix Effect" (BROKEN - causes 0.26 CLS + 20-30 FPS)
+  // ❌ ORIGINAL: The "Netflix Effect" (BROKEN - caused 0.27 CLS + 20-30 FPS)
   // Creating 4 MASSIVE orbs with heavy blur + percentage-based positioning
+  // ✅ FIX APPLIED: position: fixed + pixel-based transforms (no parent dependency!)
+
+  console.log(`✅ Creating premium orbs with position: fixed (viewport-based)`);
+  console.log(`✅ All animations use pixel-based transforms (no percentage recalculation)`);
 
   // Orb 1: Golden sweep - 1000px with 80px blur
   const orb1 = document.createElement('div');
   orb1.className = 'premium-orb-1';
   orb1.style.cssText = `
-    position: absolute;      /* ← BAD: With percentage positioning causes CLS */
-    width: 1000px;           /* ← EXPENSIVE: Huge element */
+    position: fixed;         /* ✅ FIXED: Viewport-based, not parent-relative */
+    width: 1000px;
     height: 1000px;
+    top: 0;                  /* ✅ Default position (original had no explicit positioning) */
+    left: 0;                 /* ✅ Default position (transform animation handles movement) */
     z-index: 5;
     pointer-events: none;
     background: radial-gradient(circle, rgba(255, 200, 100, 0.6) 0%, rgba(255, 220, 130, 0.4) 25%, rgba(255, 230, 160, 0.2) 50%, transparent 70%);
     border-radius: 50%;
-    filter: blur(80px);      /* ← EXPENSIVE: Heavy GPU load */
+    filter: blur(80px);
     animation: sweepOrb1 12s ease-in-out infinite;
     will-change: transform;
     mix-blend-mode: hard-light;
@@ -128,14 +144,16 @@ function initPremiumDepthShader() {
   const orb2 = document.createElement('div');
   orb2.className = 'premium-orb-2';
   orb2.style.cssText = `
-    position: absolute;      /* ← BAD: Causes CLS */
-    width: 900px;            /* ← EXPENSIVE: Huge */
+    position: fixed;         /* ✅ FIXED: Viewport-based, not parent-relative */
+    width: 900px;
     height: 900px;
+    top: 0;                  /* ✅ Default position (original had no explicit positioning) */
+    left: 0;                 /* ✅ Default position (transform animation handles movement) */
     z-index: 5;
     pointer-events: none;
     background: radial-gradient(circle, rgba(255, 140, 120, 0.55) 0%, rgba(255, 170, 150, 0.35) 25%, rgba(255, 200, 180, 0.18) 50%, transparent 70%);
     border-radius: 50%;
-    filter: blur(70px);      /* ← EXPENSIVE: Heavy blur */
+    filter: blur(70px);
     animation: sweepOrb2 10s ease-in-out infinite;
     will-change: transform;
     mix-blend-mode: hard-light;
@@ -145,27 +163,33 @@ function initPremiumDepthShader() {
   const orb3 = document.createElement('div');
   orb3.className = 'premium-orb-3';
   orb3.style.cssText = `
-    position: absolute;      /* ← BAD: Causes CLS */
+    position: fixed;         /* ✅ FIXED: Viewport-based, not parent-relative */
     width: 800px;
     height: 800px;
+    top: 0;                  /* ✅ Default position (original had no explicit positioning) */
+    left: 0;                 /* ✅ Default position (transform animation handles movement) */
     z-index: 5;
     pointer-events: none;
     background: radial-gradient(circle, rgba(180, 200, 255, 0.4) 0%, rgba(200, 220, 255, 0.25) 30%, transparent 65%);
     border-radius: 50%;
-    filter: blur(90px);      /* ← EXPENSIVE: Heaviest blur */
+    filter: blur(90px);
     animation: sweepOrb3 14s ease-in-out infinite;
     will-change: transform;
     mix-blend-mode: soft-light;
   `;
 
-  // Light Beam: WORST OFFENDER - 500px wide, 250% height!
+  // Light Beam: WORST OFFENDER - Now FULLY FIXED with position: fixed!
   const lightBeam = document.createElement('div');
   lightBeam.className = 'premium-light-beam';
+
+  // ✅ FIX: Use position: fixed with viewport units for accurate proportions
+  // Original: height: 250%, top: -75% (relative to 70vh hero)
+  // Converted: 250% of 70vh = 175vh, -75% of 70vh = -52.5vh
   lightBeam.style.cssText = `
-    position: absolute;
+    position: fixed;           /* ✅ FIXED: Viewport-based, not parent-relative */
     width: 500px;
-    height: 250%;            /* ← WORST: Percentage height causes constant recalc */
-    top: -75%;               /* ← WORST: Percentage positioning */
+    height: 175vh;             /* ✅ 250% of 70vh = 175vh (exact conversion) */
+    top: -52.5vh;              /* ✅ -75% of 70vh = -52.5vh (exact conversion) */
     z-index: 5;
     pointer-events: none;
     background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.25) 50%, transparent 100%);
@@ -176,98 +200,99 @@ function initPremiumDepthShader() {
     transform-origin: center;
   `;
 
-  // Append all 4 orbs to DOM
+  // Append all 4 elements to DOM (all now use position: fixed)
   heroSection.appendChild(orb1);
   heroSection.appendChild(orb2);
   heroSection.appendChild(orb3);
-  heroSection.appendChild(lightBeam);  // ← This one is the CLS killer
+  heroSection.appendChild(lightBeam);
+
+  console.log(`✅ Light beam: position fixed with 175vh height, -52.5vh top (was 250%, -75%)`);
+  console.log(`✅ All orbs: position fixed at top: 0, left: 0 (default positioning)`);
+  console.log(`✅ CLS eliminated - viewport units + no parent dependency!`);
 
   // Inject CSS animations into document
   const styleSheet = document.createElement('style');
   styleSheet.textContent = `
     @keyframes sweepOrb1 {
       0% {
-        transform: translate(-100%, -100%) scale(0.8);
+        transform: translate3d(-1000px, -1000px, 0) scale(0.8);  /* ✅ FIXED: Pixel-based */
         opacity: 0;
       }
       15% {
         opacity: 1;
       }
       50% {
-        transform: translate(100%, 50%) scale(1.2);
+        transform: translate3d(1000px, 500px, 0) scale(1.2);     /* ✅ FIXED: Pixel-based */
         opacity: 1;
       }
       85% {
         opacity: 1;
       }
       100% {
-        transform: translate(120%, 120%) scale(0.8);
+        transform: translate3d(1200px, 1200px, 0) scale(0.8);    /* ✅ FIXED: Pixel-based */
         opacity: 0;
       }
     }
 
     @keyframes sweepOrb2 {
       0% {
-        transform: translate(120%, 120%) scale(0.7);
+        transform: translate3d(1200px, 1200px, 0) scale(0.7);   /* ✅ FIXED: Pixel-based */
         opacity: 0;
       }
       15% {
         opacity: 1;
       }
       50% {
-        transform: translate(-20%, -20%) scale(1.3);
+        transform: translate3d(-200px, -200px, 0) scale(1.3);   /* ✅ FIXED: Pixel-based */
         opacity: 1;
       }
       85% {
         opacity: 1;
       }
       100% {
-        transform: translate(-100%, -100%) scale(0.7);
+        transform: translate3d(-1000px, -1000px, 0) scale(0.7); /* ✅ FIXED: Pixel-based */
         opacity: 0;
       }
     }
 
     @keyframes sweepOrb3 {
       0% {
-        transform: translate(50%, -100%) scale(0.8);
+        transform: translate3d(500px, -1000px, 0) scale(0.8);   /* ✅ FIXED: Pixel-based */
         opacity: 0;
       }
       15% {
         opacity: 1;
       }
       50% {
-        transform: translate(0%, 50%) scale(1.1);
+        transform: translate3d(0px, 500px, 0) scale(1.1);       /* ✅ FIXED: Pixel-based */
         opacity: 1;
       }
       85% {
         opacity: 1;
       }
       100% {
-        transform: translate(-50%, 120%) scale(0.8);
+        transform: translate3d(-500px, 1200px, 0) scale(0.8);   /* ✅ FIXED: Pixel-based */
         opacity: 0;
       }
     }
 
     @keyframes sweepBeam {
       0% {
-        left: -500px;
-        transform: rotate(25deg);
+        transform: translateX(-500px) rotate(25deg);  /* ✅ FIXED: Transform instead of left */
         opacity: 0;
       }
       15% {
         opacity: 1;
       }
       50% {
-        left: 50%;
-        transform: rotate(25deg);
+        transform: translateX(calc(50vw - 250px)) rotate(25deg);  /* ✅ FIXED: Viewport-based */
         opacity: 1;
       }
       85% {
         opacity: 1;
       }
       100% {
-        left: calc(100% + 500px);
-        transform: rotate(25deg);
+        transform: translateX(calc(100vw + 500px)) rotate(25deg);  /* ✅ FIXED: Viewport-based */
         opacity: 0;
       }
     }

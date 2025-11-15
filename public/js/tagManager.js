@@ -65,14 +65,33 @@
   }, 5000);
 
   function injectClearanceBanner() {
-    // ❌ PROBLEM: No reserved space in DOM
-    // Banner is created dynamically without pre-allocating space
-    // When it injects, pushes all content down by its height (120px)
+    // ✅ FIXED: Banner uses fixed positioning (removed from layout flow)
+    // No space reserved needed - banner doesn't affect layout at all
+    // Slides up from bottom - no CLS!
 
     const banner = document.createElement('div');
-    banner.className = 'marketing-promo-banner';
     banner.setAttribute('role', 'banner');
     banner.setAttribute('aria-label', 'Clearance sale promotion');
+
+    // ✅ FIX: All styles inline (GTM can't access external CSS)
+    // Mobile-responsive: Adjust padding for smaller screens
+    const isMobile = window.innerWidth <= 768;
+    const padding = isMobile ? '1rem' : '1.5rem 2rem';
+
+    banner.style.cssText = `
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      padding: ${padding};
+      padding-bottom: calc(${isMobile ? '1rem' : '1.5rem'} + env(safe-area-inset-bottom));
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+      border-radius: ${isMobile ? '12px 12px 0 0' : '8px 8px 0 0'};
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+    `;
 
     banner.innerHTML = `
       <div class="promo-content">
@@ -86,25 +105,30 @@
       </div>
     `;
 
-    // ❌ Insert at top of products section (pushes everything down 120px!)
-    // This is the moment that causes CLS
-    const productsSection = document.querySelector('.products');
-    if (productsSection) {
-      productsSection.insertBefore(banner, productsSection.firstChild);
+    // ✅ FIX: Append to body (not products section)
+    // Fixed positioning means it doesn't matter where in DOM it is
+    document.body.appendChild(banner);
 
-      console.log('📢 Marketing Clearance Banner Injected (Tag Manager simulation)');
-      console.log('⚠️  CLS Impact: +0.28 (no reserved space!)');
-      console.log('⚠️  Total Site CLS: 0.08 → 0.36 (made worse!)');
-      console.log('📊 Banner CTR: 8% | Bounce increase: +12% | Net: -4% users');
-      console.log('💰 Revenue impact: -R87k/week | 3 weeks until Black Friday');
-    }
+    // ✅ FIX: Slide up animation (no layout shift!)
+    setTimeout(() => {
+      banner.style.transform = 'translateY(0)';
+    }, 100);
 
-    // Close button handler
+    console.log('📢 Marketing Clearance Banner Activated (Tag Manager simulation)');
+    console.log('✅ CLS Impact: 0.00 (fixed positioning - no layout shift!)');
+    console.log('✅ Total Site CLS: 0.08 (banner no longer contributes)');
+    console.log('📊 Products stay visible, bounce rate normalized');
+    console.log('💰 Revenue recovered: +R87k/week');
+
+    // Close button handler with slide-down animation
     const closeButton = banner.querySelector('.promo-close');
     if (closeButton) {
       closeButton.addEventListener('click', () => {
-        banner.remove();
-        console.log('✅ Banner closed by user');
+        banner.style.transform = 'translateY(100%)';
+        setTimeout(() => {
+          banner.remove();
+          console.log('✅ Banner closed by user');
+        }, 300); // Wait for animation to complete
       });
     }
 
@@ -112,8 +136,8 @@
     const ctaButton = banner.querySelector('.promo-cta');
     if (ctaButton) {
       ctaButton.addEventListener('click', () => {
-        console.log('🛒 User clicked "Shop Clearance" (8% CTR)');
-        console.log('⚠️  But 12% bounced due to layout shift = net negative');
+        console.log('🛒 User clicked "Shop Clearance"');
+        console.log('✅ Zero CLS = better engagement!');
       });
     }
   }

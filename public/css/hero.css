@@ -2,12 +2,16 @@
 /* Progressive enhancement: AVIF/WebP formats with 4 breakpoints (800w, 1200w, 1920w, 2560w) */
 .hero {
   position: relative;
-  height: 70vh;
+  height: 70vh;        /* ✅ Keep original design height - prevents content shift CLS */
+  min-height: 600px;   /* ✅ Fallback for very short viewports */
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   /* Background images now handled by <picture> elements in HTML */
+
+  /* ✅ Performance: Isolate layout calculations to this container */
+  contain: layout style;
 }
 
 /* Hero background image positioning */

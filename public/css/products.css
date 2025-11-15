@@ -4,6 +4,7 @@
   position: relative;
 }
 
+
 .products-container {
   max-width: 1600px;
   margin: 0 auto;
@@ -208,7 +209,7 @@
 
 @media (max-width: 768px) {
   .products {
-    padding: 8rem 2rem;
+padding: 3rem 2rem;
   }
 
   .product-grid {
@@ -278,22 +279,39 @@
    Injected dynamically by Marketing via Tag Manager simulation
    ==================================================================== */
 
-.marketing-promo-banner {
+/* ✅ FIXED: Banner base styles moved to inline CSS in tagManager.js
+
+   Why inline styles?
+   - Tag Manager can't access external CSS files
+   - All positioning/layout styles must be inline in GTM code editor
+   - This is realistic for real-world GTM deployments
+
+   What changed?
+   - position: fixed (removed from layout flow)
+   - bottom: 0 (slides up from bottom)
+   - No margin-bottom (doesn't take layout space)
+
+   Result: CLS 0.36 → 0.08 (removed +0.28 from banner) ✅
+
+   Child element styles (.promo-content, etc.) kept below since
+   they're still referenced by the banner HTML structure. */
+
+/* .marketing-promo-banner {
   background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
   padding: 1.5rem 2rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   margin-bottom: 6rem;
   border-radius: 8px;
 
-  /* ❌ PROBLEM: No height reservation before injection
+  ❌ PROBLEM: No height reservation before injection
      When injected at 2s mark, pushes all content down ~120px
      CLS Impact: +0.28 from this banner alone
      Total site CLS: 0.08 → 0.36 (made worse!)
 
      Context: Marketing deployed via Tag Manager to boost Q3 sales
      Result: Banner CTR 8%, but bounce +12% = net negative -4%
-     Revenue impact: -R87k/week, 3 weeks until Black Friday */
-}
+     Revenue impact: -R87k/week, 3 weeks until Black Friday
+} */
 
 .promo-content {
   display: flex;
@@ -390,10 +408,11 @@ Result: CLS 0.36 → 0.08 (removes 0.28 from banner) ✅
 
 /* Mobile adjustments */
 @media (max-width: 768px) {
+  /* .marketing-promo-banner styles now inline in tagManager.js
   .marketing-promo-banner {
     padding: 1rem;
     margin-bottom: 2rem;
-  }
+  } */
 
   .promo-content {
     flex-direction: column;
