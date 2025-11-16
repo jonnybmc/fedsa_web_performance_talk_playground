@@ -76,14 +76,16 @@ function createProductCard(product) {
   card.className = 'product-card';
 
   // ❌ BAD: Using innerHTML with complex string (slow parsing)
-  // ❌ CRITICAL: Missing width and height attributes on img!
-  //             This causes layout shifts when images load (CLS)
+  // ✅ FIXED: Added width and height attributes to prevent CLS on mobile
+  //           Matches 4:5 aspect ratio from products.css (aspect-ratio: 4/5)
   card.innerHTML = `
     <div class="product-image-container">
       <img
         src="${product.image}"
         alt="${product.alt}"
         class="product-image"
+        width="800"
+        height="1000"
         loading="lazy"
         fetchpriority="low"
       >
