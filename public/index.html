@@ -5,14 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TechMart - Quality Tech, Affordable Prices</title>
 
-  <!-- GSAP for hero animations (defer = non-blocking) -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
-  <!-- Google Fonts: Work Sans (simplified to 3 weights for demo) -->
-  <!-- ⚠️ NOTE: This demo runs on HTTP/1.1, not HTTP/2 or HTTP/3
-       Why? More representative of legacy infrastructure at many companies.
-       HTTP/1.1 has 6 concurrent connections/domain limit.
-       preconnect helps by establishing connections early! -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload"
@@ -30,149 +24,11 @@
     }
   </style>
 
-  <!-- ✅ FIXED VERSION (commented out):
-  Optimized font loading - only necessary weights, proper preconnect, display=swap
-
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  📚 RESOURCE HINTS CHEAT SHEET (for audience questions!)
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  1. dns-prefetch: DNS lookup ONLY (~0-50ms saved)
-     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-     ├─ Resolves domain → IP address
-     ├─ Cheapest/fastest hint (lowest priority)
-     └─ Use for: Third-party domains you MIGHT need (analytics, ads)
-
-  2. preconnect: DNS + TCP + TLS handshake (~50-300ms saved)
-     <link rel="preconnect" href="https://fonts.googleapis.com">
-     ├─ Does FULL connection setup (DNS + TCP + TLS)
-     ├─ More expensive than dns-prefetch, but ready for immediate use
-     └─ Use for: Critical third-party resources you WILL definitely use
-
-  3. preload: Download the actual resource NOW (highest priority)
-     <link rel="preload" href="font.woff2" as="font" crossorigin>
-     ├─ Actually fetches the file
-     ├─ Highest priority - tells browser "I need this ASAP!"
-     └─ Use for: Critical resources discovered late (fonts, hero images, critical CSS)
-
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  📊 DECISION TREE:
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  Q: Do you know the EXACT resource URL?
-    ├─ YES → Can you afford to download it now?
-    │         ├─ YES → Use PRELOAD (downloads file)
-    │         └─ NO  → Use PRECONNECT (just connection)
-    └─ NO  → Use DNS-PREFETCH (just DNS lookup)
-
-  Q: Is it on your own domain?
-    └─ NO NEED - browser already connected! (skip all hints)
-
-  Q: Will you definitely use this resource?
-    ├─ YES → PRECONNECT (or PRELOAD if you know exact URL)
-    └─ MAYBE → DNS-PREFETCH (cheaper)
-
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  🎯 REAL EXAMPLES:
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  Google Fonts: Two domains, both critical
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  ↑ preconnect: We WILL use these, but don't know exact font file URLs yet
-
-  Hero image: Critical, known URL
-  <link rel="preload" href="/hero.webp" as="image">
-  ↑ preload: Critical image we need ASAP, know exact URL
-
-  Analytics: Maybe loaded, not critical
-  <link rel="dns-prefetch" href="https://www.google-analytics.com">
-  ↑ dns-prefetch: Not critical, just prep the DNS in case
-
-  API endpoint: Definitely used, but later
-  <link rel="preconnect" href="https://api.example.com">
-  ↑ preconnect: Will fetch data soon, warm up connection
-
-  ⚠️  GOTCHA: Too many preconnects waste resources! Limit to 2-3 critical origins.
-  ⚠️  GOTCHA: preload without using = console warning + wasted bandwidth!
-
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  🔄 ORDERING MATTERS! (Critical for browser prioritization)
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  Browser parses HTML top→bottom. Resource hints need a HEAD START!
-
-  ✅ CORRECT ORDER (hints BEFORE resources that use them):
-  1. <link rel="preconnect" href="https://fonts.googleapis.com">      ← Start connection
-  2. <link rel="preconnect" href="https://fonts.gstatic.com">         ← Start connection
-  3. <link rel="stylesheet" href="fonts.googleapis.com/css2?...">     ← Uses connection
-
-  ❌ WRONG ORDER (connection starts too late):
-  1. <link rel="stylesheet" href="fonts.googleapis.com/css2?...">     ← Starts download immediately
-  2. <link rel="preconnect" href="https://fonts.googleapis.com">      ← TOO LATE! Download already waiting
-
-  📊 How Google Fonts works (why you need BOTH domains):
-  HTML → googleapis.com/css2 (gets CSS file) → gstatic.com/*.woff2 (gets font files)
-         └─ preconnect here                    └─ preconnect here too!
-
-  Timeline WITHOUT proper preconnect:
-  0ms:   Parse HTML, see <link rel="stylesheet">
-  0ms:   Start DNS lookup for googleapis.com       ← SLOW (20-120ms)
-  120ms: Connect to googleapis.com, download CSS   ← SLOW (50-200ms)
-  320ms: Parse CSS, discover font URLs on gstatic.com
-  320ms: Start DNS lookup for gstatic.com          ← SLOW AGAIN! (20-120ms)
-  440ms: Connect to gstatic.com, download fonts    ← SLOW (100-500ms)
-  940ms: Fonts finally ready!
-
-  Timeline WITH preconnect (lines 17, 92-93 above):
-  0ms:   Parse HTML, see preconnect hints
-  0ms:   Start connecting to BOTH domains in parallel  ← HEAD START!
-  50ms:  <link rel="stylesheet"> appears in HTML
-  50ms:  Connection already ready! Download CSS immediately
-  150ms: Parse CSS, discover font URLs
-  150ms: Connection to gstatic.com already ready! Download fonts immediately
-  350ms: Fonts ready! (590ms saved!)
-
-  ⚡ KEY INSIGHT: Place preconnects as EARLY as possible in <head>
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  Only load weights actually used: 400, 500, 600, 700
-  Remove Playfair Display entirely (use system serif fallback or CSS @font-face subset)
-  Add display=swap to show fallback text immediately (FOUT better than FOIT)
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
-  EVEN BETTER: Load fonts asynchronously using preload + async
-  <link rel="preload"
-        as="style"
-        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
-        onload="this.onload=null;this.rel='stylesheet'">
-  <noscript>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  </noscript>
-
-  Fallback fonts in CSS while custom fonts load
-  <style>
-    :root {
-      --font-heading: system-ui, -apple-system, sans-serif;
-      --font-body: system-ui, -apple-system, sans-serif;
-    }
-  </style>
-  -->
-
-  <!-- ❌ PROBLEM: All CSS files are render-blocking -->
-  <!-- Browser must download and parse ALL CSS before rendering page -->
-  <!-- ❌ NOTE: 'defer' attribute does NOT work on <link> tags - only on <script> tags! -->
-  <!-- The 'defer' here has NO EFFECT and will be ignored by browsers -->
-  <!-- <link rel="stylesheet" href="css/base.css"> -->
   <link rel="stylesheet" href="css/hero.css">
   <link rel="preload" href="css/products.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <link rel="preload" href="css/footer.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
-  <!-- ✅ Preload hero images for LCP optimization -->
-  <!-- Preload base image (AVIF format with responsive srcset) -->
+  <!-- Preload hero images for LCP optimization -->
   <link rel="preload" as="image"
         fetchpriority="high"
         imagesrcset="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=75&fm=avif 800w,
@@ -181,8 +37,7 @@
                      https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=2560&q=75&fm=avif 2560w"
         imagesizes="100vw"
         type="image/avif">
-  
-  <!-- preload blend image -->
+
   <link rel="preload" as="image"
         fetchpriority="high"
         imagesrcset="https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=800&q=75&fm=avif 800w,
@@ -234,22 +89,12 @@ h1, h2, h3, h4 {
   letter-spacing: -0.02em;
 }
 
-/* .section-title {
-  font-size: 2.5rem;
-  text-align: center;
-  margin-bottom: 8rem;
-  color: var(--color-primary);
-  font-weight: 300;
-  letter-spacing: 0.02em;
-} */
-
 /* Navigation */
 .nav {
   position: fixed;
   top: 0;
   width: 100%;
   background: rgba(255, 255, 255, 0.98);
-  /* backdrop-filter: blur(8px); */
   z-index: 1000;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
@@ -284,7 +129,6 @@ h1, h2, h3, h4 {
   font-weight: 300;
   font-size: 0.9375rem;
   letter-spacing: 0.05em;
-  /* transition: color 0.3s ease; */
 }
 
 .nav-menu a:hover {
@@ -387,118 +231,16 @@ h1, h2, h3, h4 {
     margin: -0.5rem;
   }
 }
-
-/* ==============================================================================
-   ❌ PROBLEM 1: The 8MB Hero Image (LCP: ~8 seconds)
-   ==============================================================================
-
-   THE BACKSTORY:
-   Design Review Meeting, July 2024 (2 months before launch)
-
-   Design Director (presenting mockups on 5K iMac):
-   "This hero section needs to feel PREMIUM. Think Apple. Think BoConcept.
-    I want maximum quality lifestyle photography. 5K resolution minimum.
-    We're targeting affluent buyers - they'll appreciate the quality."
-
-   Developer (Frontend):
-   "Okay, so I'll use Unsplash with w=5120 (5K width) and q=100 (max quality).
-    Looks STUNNING on my MacBook Pro! Shipping it."
-
-   QA (testing on office WiFi, 100Mbps fiber):
-   "Hero looks gorgeous! Approved for launch. ✅"
-
-   [October 1, 2024: Launch Day]
-
-   Internal Slack #general:
-   CEO: "WOW! This looks incredible. Best site we've ever launched!"
-   Design Director: "Thank you! We really nailed the premium aesthetic."
-   Marketing: "Already getting compliments from clients! 🎉"
-
-   [Week 2 post-launch...]
-
-   User (Twitter, Cape Town, 14Mbps):
-   "Why does @Atelier homepage take 30 seconds to load? Just seeing blank white screen..."
-
-   User (Sandton, mobile LTE):
-   "Gorgeous site but takes FOREVER to load. Old site was way faster."
-
-   Analytics (Real User Monitoring):
-   - LCP (Largest Contentful Paint): 7.8 seconds (target: <2.5s)
-   - Hero image size: 8.2MB (JPEG, 5120x3413)
-   - 60% of users on <20Mbps connections
-   - Bounce rate: 34% higher than old site
-
-   [The Performance Consultant's Analysis]
-
-   Performance Consultant: "Let's look at Network panel..."
-   *Opens Chrome DevTools → Network tab*
-
-   "See this 8.2MB photo? That's your LCP element.
-    On South Africa's average 14Mbps connection:
-    8.2MB × 8 bits/byte ÷ 14Mbps = 4.7 seconds JUST to download
-    Add DNS/TLS/TTFB... you're at 6-8 seconds LCP.
-
-    Users see a blank screen for 8 seconds. Most leave after 3."
-
-   Developer: "But... it looks amazing on my machine?"
-
-   Performance Consultant: "Your office has 100Mbps fiber. Your CUSTOMERS don't."
-
-   THE FIX (commented below):
-   - Reduce to w=1920 (full HD, plenty for hero)
-   - Use q=75 (imperceptible quality difference)
-   - Convert to WebP (30-40% smaller than JPEG)
-   - Add fetchpriority="high" to prioritize download
-   Result: 8.2MB → 180KB (45× smaller!), LCP: 8s → 1.2s ✅
-   ============================================================================== */
  </style>
 
-  <!-- ✅ FIXED VERSION (commented out):
-  Critical CSS approach - inline above-the-fold styles, async load the rest
-
-  <style>
-    /* INLINE CRITICAL CSS HERE (from base.css + hero.css) */
-    /* Critical = styles needed for above-the-fold (first screen) content */
-
-    /* From base.css: */
-    /* - Reset styles (lines 1-6) */
-    /* - CSS variables (lines 8-23) */
-    /* - Body styles (lines 25-44) */
-    /* - Navigation styles (lines 62-107) */
-
-    /* From hero.css: */
-    /* - All hero section styles (lines 1-130) */
-    /* Hero is above-the-fold so needs to be critical */
-
-    /* Total: ~6KB inlined CSS for instant first paint */
-  </style>
-
-  <!-- Load non-critical CSS asynchronously (below-the-fold content) -->
-  <!-- Products and footer are below fold, so can load after page renders -->
-  <link rel="preload" href="css/products.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <link rel="preload" href="css/footer.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-
-  <!-- Fallback for browsers without JS -->
-  <noscript>
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/hero.css">
-    <link rel="stylesheet" href="css/products.css">
-    <link rel="stylesheet" href="css/footer.css">
-  </noscript>
-
   <!-- Google Analytics 4 (GA4) - Real User Monitoring -->
-  <!-- Replace G-XXXXXXXXXX with your actual GA4 Measurement ID -->
-  <!-- Get your measurement ID from: https://analytics.google.com/analytics/web/ -->
-  <!-- ⚠️ DEMO NOTE: For this talk, metrics will log to console if GA4 is not configured -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-7012WQ517Q"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-7012WQ517Q', {
-      // Send page view on load
       send_page_view: true,
-      // Custom dimensions for debugging
       custom_map: {
         dimension1: 'metric_rating',
         dimension2: 'debug_target'
@@ -506,17 +248,13 @@ h1, h2, h3, h4 {
     });
   </script>
 
-  <!-- Web Vitals RUM - Real User Monitoring with Attribution -->
-  <!-- Captures Core Web Vitals from real users and sends to GA4 -->
-  <!-- For demo/talk: Also logs detailed attribution data to console -->
+  <!-- Web Vitals RUM -->
   <script type="module">
     import { initWebVitals } from './js/webVitals.js';
 
-    // Initialize Web Vitals monitoring as soon as possible
     initWebVitals();
 
-    // Log confirmation for demo purposes
-    console.log('%c✅ Performance monitoring initialized', 'color: green; font-weight: bold');
+    console.log('%cPerformance monitoring initialized', 'color: green; font-weight: bold');
     console.log('%c   → Real User Monitoring (RUM) active', 'color: green');
     console.log('%c   → Core Web Vitals reporting to console & GA4', 'color: green');
   </script>
@@ -526,7 +264,6 @@ h1, h2, h3, h4 {
   <nav class="nav">
     <div class="nav-container">
       <div class="nav-logo">TechMart</div>
-      <!-- Mobile menu toggle (CSS-only, zero JavaScript) -->
       <input type="checkbox" id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation menu">
       <label for="menu-toggle" class="menu-icon" aria-label="Menu">
         <span></span>
@@ -589,7 +326,6 @@ h1, h2, h3, h4 {
       <h2 class="section-title">Popular Products</h2>
 
       <div class="product-grid">
-        <!-- Products rendered dynamically by productRenderer.js -->
         <p style="color: rgba(255,255,255,0.5); text-align: center; grid-column: 1/-1;">Loading products...</p>
       </div>
     </div>
@@ -638,39 +374,7 @@ h1, h2, h3, h4 {
     </div>
   </footer>
 
-  <!-- ✅ JS modules loaded at end (type="module" for ES6 support) -->
   <script type="module" src="js/main.js"></script>
-
-  <!-- ❌ PROBLEM 2: Marketing Tag Manager Clearance Banner (CLS: +0.28) -->
-  <!-- Deployed by Marketing team to boost Q3 sales before Black Friday (3 weeks away) -->
-  <!-- Loads asynchronously 2 seconds after page, no reserved space -->
-  <!-- Result: CLS 0.08 → 0.36 (made worse!), Mobile bounce 76% → 78% -->
-  <!-- Banner CTR: 8%, but bounce +12% = net negative -4% users = -R87k/week -->
   <script src="js/tagManager.js" defer></script>
-
-  <!-- ✅ FIX (commented out): Reserve space for banner before Tag Manager loads
-
-  Option 1: HTML Skeleton (uncomment the div below)
-  <div class="promo-banner-skeleton" aria-hidden="true">
-    <div style="height: 120px; background: rgba(251, 191, 36, 0.05); margin-bottom: 3rem; border-radius: 8px;"></div>
-  </div>
-
-  Then modify tagManager.js to replace skeleton instead of inserting:
-  const skeleton = document.querySelector('.promo-banner-skeleton');
-  if (skeleton) skeleton.replaceWith(banner);
-
-  Option 2: CSS Reserved Space (add to products.css)
-  .products::before {
-    content: '';
-    display: block;
-    height: 120px;
-    margin-bottom: 3rem;
-  }
-
-  Result: CLS 0.36 → 0.08 (removes +0.28 from banner) ✅
-  Mobile bounce: 78% → 76% (back to baseline)
-  Desktop bounce: 34% → 32% (back to baseline)
-
-  -->
 </body>
 </html>

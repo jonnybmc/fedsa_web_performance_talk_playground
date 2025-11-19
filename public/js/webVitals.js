@@ -12,27 +12,21 @@ import { onCLS, onFCP, onFID, onINP, onLCP, onTTFB } from 'https://unpkg.com/web
 
 /**
  * Send metric to Google Analytics 4
- *
- * GA4 automatically captures some performance metrics, but we send custom
- * events with attribution data for better debugging.
  */
 function sendToGoogleAnalytics({ name, value, rating, delta, id, attribution }) {
-  // Check if GA4 is loaded
   if (typeof gtag === 'undefined') {
-    console.warn('⚠️ Google Analytics not loaded - metric not sent:', name);
+    console.warn('Google Analytics not loaded - metric not sent:', name);
     return;
   }
 
-  // Prepare event parameters
   const eventParams = {
-    value: Math.round(name === 'CLS' ? value * 1000 : value), // CLS in milliseconds for GA4
+    value: Math.round(name === 'CLS' ? value * 1000 : value),
     metric_id: id,
     metric_value: value,
     metric_delta: delta,
-    metric_rating: rating, // 'good', 'needs-improvement', or 'poor'
+    metric_rating: rating,
   };
 
-  // Add attribution data specific to each metric
   switch (name) {
     case 'CLS':
       Object.assign(eventParams, {
@@ -84,10 +78,9 @@ function sendToGoogleAnalytics({ name, value, rating, delta, id, attribution }) 
       break;
   }
 
-  // Send to GA4
   gtag('event', name, eventParams);
 
-  console.log(`📊 Sent ${name} to Google Analytics:`, {
+  console.log(`Sent ${name} to Google Analytics:`, {
     value,
     rating,
     eventParams
@@ -95,10 +88,7 @@ function sendToGoogleAnalytics({ name, value, rating, delta, id, attribution }) 
 }
 
 /**
- * Log detailed attribution data to console for demo/debugging
- *
- * This is especially useful during your talk to show attendees what
- * information the web-vitals library provides for debugging.
+ * Log detailed attribution data to console for debugging
  */
 function logToConsole({ name, value, rating, delta, id, attribution }) {
   const emoji = rating === 'good' ? '✅' : rating === 'needs-improvement' ? '⚠️' : '❌';
@@ -109,55 +99,54 @@ function logToConsole({ name, value, rating, delta, id, attribution }) {
   console.log('Delta:', delta);
   console.log('ID:', id);
 
-  // Log attribution data specific to each metric
   switch (name) {
     case 'CLS':
-      console.log('🎯 Attribution:');
+      console.log('Attribution:');
       console.log('  Largest Shift Target:', attribution.largestShiftTarget);
       console.log('  Largest Shift Source:', attribution.largestShiftSource);
       console.log('  Largest Shift Time:', attribution.largestShiftTime, 'ms');
       console.log('  Largest Shift Value:', attribution.largestShiftValue);
       console.log('  Load State:', attribution.loadState);
-      console.log('\n💡 TIP: This element caused the biggest layout shift!');
+      console.log('\nTIP: This element caused the biggest layout shift!');
       if (attribution.largestShiftTarget) {
         console.log('   Inspect:', attribution.largestShiftTarget);
       }
       break;
 
     case 'LCP':
-      console.log('🎯 Attribution:');
+      console.log('Attribution:');
       console.log('  Element:', attribution.element);
       console.log('  URL:', attribution.url);
       console.log('  Time to First Byte:', attribution.timeToFirstByte, 'ms');
       console.log('  Resource Load Delay:', attribution.resourceLoadDelay, 'ms');
       console.log('  Resource Load Time:', attribution.resourceLoadTime, 'ms');
       console.log('  Element Render Delay:', attribution.elementRenderDelay, 'ms');
-      console.log('\n💡 TIP: This is the largest contentful element in viewport!');
+      console.log('\nTIP: This is the largest contentful element in viewport!');
       break;
 
     case 'INP':
-      console.log('🎯 Attribution:');
+      console.log('Attribution:');
       console.log('  Interaction Target:', attribution.interactionTarget);
       console.log('  Interaction Type:', attribution.interactionType);
       console.log('  Load State:', attribution.loadState);
       console.log('  Interaction Time:', attribution.interactionTime, 'ms');
       console.log('  Processing Duration:', attribution.processingDuration, 'ms');
       console.log('  Presentation Delay:', attribution.presentationDelay, 'ms');
-      console.log('\n💡 TIP: This interaction took the longest to respond!');
+      console.log('\nTIP: This interaction took the longest to respond!');
       if (attribution.interactionTarget) {
         console.log('   Element:', attribution.interactionTarget);
       }
       break;
 
     case 'FCP':
-      console.log('🎯 Attribution:');
+      console.log('Attribution:');
       console.log('  Time to First Byte:', attribution.timeToFirstByte, 'ms');
       console.log('  First Byte to FCP:', attribution.firstByteToFCP, 'ms');
       console.log('  Load State:', attribution.loadState);
       break;
 
     case 'TTFB':
-      console.log('🎯 Attribution:');
+      console.log('Attribution:');
       console.log('  Waiting Duration:', attribution.waitingDuration, 'ms');
       console.log('  DNS Duration:', attribution.dnsDuration, 'ms');
       console.log('  Connection Duration:', attribution.connectionDuration, 'ms');
@@ -170,18 +159,12 @@ function logToConsole({ name, value, rating, delta, id, attribution }) {
 
 /**
  * Initialize Web Vitals monitoring
- *
- * This function is called when the page loads and sets up listeners
- * for all Core Web Vitals metrics.
  */
 export function initWebVitals() {
-  console.log('%c🚀 Web Vitals RUM initialized', 'color: blue; font-weight: bold');
+  console.log('%cWeb Vitals RUM initialized', 'color: blue; font-weight: bold');
   console.log('%cCore Web Vitals will be reported as they occur.', 'color: blue');
-  console.log('%c📊 Metrics are sent to Google Analytics (if configured)', 'color: blue');
+  console.log('%cMetrics are sent to Google Analytics (if configured)', 'color: blue');
   console.log('');
-
-  // Report each metric as it becomes available
-  // For demo purposes, we report to both console and GA4
 
   onCLS((metric) => {
     logToConsole(metric);
@@ -193,7 +176,6 @@ export function initWebVitals() {
     sendToGoogleAnalytics(metric);
   });
 
-  // FID is deprecated but still collected for backwards compatibility
   onFID((metric) => {
     logToConsole(metric);
     sendToGoogleAnalytics(metric);
@@ -214,32 +196,29 @@ export function initWebVitals() {
     sendToGoogleAnalytics(metric);
   });
 
-  console.log('%c✅ All Web Vitals listeners registered', 'color: green; font-weight: bold');
+  console.log('%cAll Web Vitals listeners registered', 'color: green; font-weight: bold');
   console.log('');
 }
 
-/**
- * For demo purposes: Log a summary of what we're monitoring
- */
 console.log(`%c
 ╔══════════════════════════════════════════════════════════╗
-║  📊 Real User Monitoring (RUM) Active                   ║
+║  Real User Monitoring (RUM) Active                      ║
 ║  Powered by web-vitals@4 with attribution              ║
 ╚══════════════════════════════════════════════════════════╝
 
-📈 Monitoring Core Web Vitals:
+Monitoring Core Web Vitals:
   • CLS (Cumulative Layout Shift) - Target: <0.1
   • LCP (Largest Contentful Paint) - Target: <2.5s
   • INP (Interaction to Next Paint) - Target: <200ms
   • FCP (First Contentful Paint) - Target: <1.8s
   • TTFB (Time to First Byte) - Target: <800ms
 
-🎯 Attribution data will identify:
+Attribution data will identify:
   • Which elements cause problems
   • When problems occur (load state)
   • How long each phase takes
 
-💡 For this demo:
+For this demo:
   • Metrics logged to console with full debugging info
   • Metrics sent to Google Analytics 4 (if configured)
   • Useful for diagnosing performance issues in production

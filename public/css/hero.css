@@ -1,16 +1,13 @@
-/* ✅ FIXED: Optimized hero background with responsive <picture> elements */
-/* Progressive enhancement: AVIF/WebP formats with 4 breakpoints (800w, 1200w, 1920w, 2560w) */
+/* Optimized hero background with responsive <picture> elements */
 .hero {
   position: relative;
-  height: 70vh;        /* ✅ Keep original design height - prevents content shift CLS */
-  min-height: 600px;   /* ✅ Fallback for very short viewports */
+  height: 70vh;
+  min-height: 600px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  /* Background images now handled by <picture> elements in HTML */
 
-  /* ✅ Performance: Isolate layout calculations to this container */
   contain: layout style;
 }
 
@@ -43,7 +40,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 2; /* Above background images (z:1) */
+  z-index: 2;
   background: linear-gradient(135deg, rgba(157, 0, 255, 0.3) 0%, rgb(72 61 66 / 75%) 50%, rgba(0, 240, 255, 0.3) 100%);
   mix-blend-mode: multiply;
 }
@@ -56,7 +53,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 3; /* Above gradient overlay (z:2) */
+  z-index: 3;
   background-image:
     linear-gradient(rgba(255, 0, 107, 0.1) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
@@ -66,7 +63,7 @@
 
 .hero-content {
   position: relative;
-  z-index: 4; /* Above all overlays (grid at z:3) */
+  z-index: 4;
   text-align: center;
   max-width: 900px;
   padding: 0 2rem;
@@ -93,7 +90,6 @@
   margin-bottom: 3rem;
   color: rgba(255, 255, 255, 0.9);
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  /* ❌ Designer wanted "elegant serif" for this one line → loaded entire font family */
   font-family: 'Playfair Display', serif;
   font-style: italic;
 

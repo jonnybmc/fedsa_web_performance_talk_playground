@@ -74,7 +74,6 @@ app.get('/products/:id', async (c) => {
   }
 
   await delay(400);
-  console.log(`🐌 Slow API call for product ${id} (400ms delay) - This is why hover feels frozen!`);
 
   return c.json(product);
 });

@@ -1,16 +1,6 @@
-// ==============================================================================
-// animations.js - Hero animations + Product interactions
-// ==============================================================================
-// PROBLEM 3: The "Netflix Effect" (CLS: 0.26, FPS: 20-30)
-// PROBLEM 4: Hover Effect Disaster (INP: 620ms)
-// ==============================================================================
-
 export function initHeroAnimation() {
-  // ❌ PROBLEM 3: The "Netflix Effect" - initPremiumDepthShader()
-  // This is where the R3.5M redesign went wrong...
   initPremiumDepthShader();
 
-  // ✅ These GSAP animations are fine - simple opacity/transform changes
   gsap.to('.hero-title', {
     opacity: 1,
     y: 0,
@@ -44,92 +34,29 @@ export function initHeroAnimation() {
   });
 }
 
-// ==============================================================================
-// ❌ PROBLEM 3: The "Netflix Effect" Animated Orbs
-// ==============================================================================
-//
-// THE BACKSTORY:
-// Sprint Planning Meeting, Product backlog grooming
-//
-// PM (excited): "I saw this gorgeous animated effect on Netflix's homepage.
-//                It feels SO premium and immersive. Can we do something like that?"
-//
-// Design Lead (lighting up): "YES! Absolutely! I've been wanting to add more depth.
-//                             Let's do animated gradient orbs with blur effects.
-//                             Four layers for depth - just like Apple does!"
-//
-// Senior Dev: "That might be expensive to animate..."
-//
-// PM: "It's just CSS blur, right? How hard can it be?"
-//
-// Design Lead: "Look, I'll design it over the weekend. Trust me, it'll elevate
-//               the entire brand. This is what modern premium sites do."
-//
-// [Weekend passes...]
-//
-// Developer (Monday, tired): "Okay, created 4 huge orbs with 70-90px blur each.
-//                             Looks STUNNING on my M1 Max! Shipping it."
-//
-// [3 weeks later, after launch...]
-//
-// Performance Consultant (looking at DevTools):
-// "This is causing 0.26 CLS and dropping FPS to 20-30 on real devices.
-//  See these purple layout shift bars? All from the orbs.
-//  See the frame drops? Heavy blur + continuous transforms."
-//
-// PM: "But... but it looks amazing!"
-//
-// Performance Consultant: "On your M1 Max, yes. On a mid-tier Android
-//                          in Johannesburg with 60% battery? Frozen."
-//
-// THE NEGOTIATION:
-// We can keep the premium feel but need to optimize:
-// - Remove the light beam (worst offender with height: 250%)
-// - Reduce from 4 orbs → 2 orbs
-// - Reduce blur: 80-90px → 35px (still premium, way cheaper)
-// - Change from absolute + percentage → fixed positioning (prevents CLS)
-// - Add containment to isolate layout impact
-//
-// THE FIX (commented below for live demo):
-// ==============================================================================
-
 function initPremiumDepthShader() {
-  console.log('🎨 Initializing "premium animated depth effect"...');
-  console.log('💡 PM: "I saw this on Netflix. Can we do that?"');
-
-  // ✅ PERFORMANCE FIX: Progressive enhancement - skip on mobile/low-end devices
   const isMobile = window.innerWidth <= 768;
   const isLowEnd = navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4;
 
   if (isMobile || isLowEnd) {
-    console.log('📱 Mobile or low-end device - light beam effects disabled for performance');
-    console.log('✅ CLS avoided by skipping expensive animations');
     return;
   }
 
   const heroSection = document.querySelector('.hero');
 
   if (!heroSection) {
-    console.error('❌ Hero section not found!');
     return;
   }
-
-  // ❌ ORIGINAL: The "Netflix Effect" (BROKEN - caused 0.27 CLS + 20-30 FPS)
-  // Creating 4 MASSIVE orbs with heavy blur + percentage-based positioning
-  // ✅ FIX APPLIED: position: fixed + pixel-based transforms (no parent dependency!)
-
-  console.log(`✅ Creating premium orbs with position: fixed (viewport-based)`);
-  console.log(`✅ All animations use pixel-based transforms (no percentage recalculation)`);
 
   // Orb 1: Golden sweep - 1000px with 80px blur
   const orb1 = document.createElement('div');
   orb1.className = 'premium-orb-1';
   orb1.style.cssText = `
-    position: fixed;         /* ✅ FIXED: Viewport-based, not parent-relative */
+    position: fixed;
     width: 1000px;
     height: 1000px;
-    top: 0;                  /* ✅ Default position (original had no explicit positioning) */
-    left: 0;                 /* ✅ Default position (transform animation handles movement) */
+    top: 0;
+    left: 0;
     z-index: 5;
     pointer-events: none;
     background: radial-gradient(circle, rgba(255, 200, 100, 0.6) 0%, rgba(255, 220, 130, 0.4) 25%, rgba(255, 230, 160, 0.2) 50%, transparent 70%);
@@ -144,11 +71,11 @@ function initPremiumDepthShader() {
   const orb2 = document.createElement('div');
   orb2.className = 'premium-orb-2';
   orb2.style.cssText = `
-    position: fixed;         /* ✅ FIXED: Viewport-based, not parent-relative */
+    position: fixed;
     width: 900px;
     height: 900px;
-    top: 0;                  /* ✅ Default position (original had no explicit positioning) */
-    left: 0;                 /* ✅ Default position (transform animation handles movement) */
+    top: 0;
+    left: 0;
     z-index: 5;
     pointer-events: none;
     background: radial-gradient(circle, rgba(255, 140, 120, 0.55) 0%, rgba(255, 170, 150, 0.35) 25%, rgba(255, 200, 180, 0.18) 50%, transparent 70%);
@@ -163,11 +90,11 @@ function initPremiumDepthShader() {
   const orb3 = document.createElement('div');
   orb3.className = 'premium-orb-3';
   orb3.style.cssText = `
-    position: fixed;         /* ✅ FIXED: Viewport-based, not parent-relative */
+    position: fixed;
     width: 800px;
     height: 800px;
-    top: 0;                  /* ✅ Default position (original had no explicit positioning) */
-    left: 0;                 /* ✅ Default position (transform animation handles movement) */
+    top: 0;
+    left: 0;
     z-index: 5;
     pointer-events: none;
     background: radial-gradient(circle, rgba(180, 200, 255, 0.4) 0%, rgba(200, 220, 255, 0.25) 30%, transparent 65%);
@@ -178,18 +105,14 @@ function initPremiumDepthShader() {
     mix-blend-mode: soft-light;
   `;
 
-  // Light Beam: WORST OFFENDER - Now FULLY FIXED with position: fixed!
+  // Light Beam
   const lightBeam = document.createElement('div');
   lightBeam.className = 'premium-light-beam';
-
-  // ✅ FIX: Use position: fixed with viewport units for accurate proportions
-  // Original: height: 250%, top: -75% (relative to 70vh hero)
-  // Converted: 250% of 70vh = 175vh, -75% of 70vh = -52.5vh
   lightBeam.style.cssText = `
-    position: fixed;           /* ✅ FIXED: Viewport-based, not parent-relative */
+    position: fixed;
     width: 500px;
-    height: 175vh;             /* ✅ 250% of 70vh = 175vh (exact conversion) */
-    top: -52.5vh;              /* ✅ -75% of 70vh = -52.5vh (exact conversion) */
+    height: 175vh;
+    top: -52.5vh;
     z-index: 5;
     pointer-events: none;
     background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.25) 50%, transparent 100%);
@@ -200,99 +123,94 @@ function initPremiumDepthShader() {
     transform-origin: center;
   `;
 
-  // Append all 4 elements to DOM (all now use position: fixed)
   heroSection.appendChild(orb1);
   heroSection.appendChild(orb2);
   heroSection.appendChild(orb3);
   heroSection.appendChild(lightBeam);
-
-  console.log(`✅ Light beam: position fixed with 175vh height, -52.5vh top (was 250%, -75%)`);
-  console.log(`✅ All orbs: position fixed at top: 0, left: 0 (default positioning)`);
-  console.log(`✅ CLS eliminated - viewport units + no parent dependency!`);
 
   // Inject CSS animations into document
   const styleSheet = document.createElement('style');
   styleSheet.textContent = `
     @keyframes sweepOrb1 {
       0% {
-        transform: translate3d(-1000px, -1000px, 0) scale(0.8);  /* ✅ FIXED: Pixel-based */
+        transform: translate3d(-1000px, -1000px, 0) scale(0.8);
         opacity: 0;
       }
       15% {
         opacity: 1;
       }
       50% {
-        transform: translate3d(1000px, 500px, 0) scale(1.2);     /* ✅ FIXED: Pixel-based */
+        transform: translate3d(1000px, 500px, 0) scale(1.2);
         opacity: 1;
       }
       85% {
         opacity: 1;
       }
       100% {
-        transform: translate3d(1200px, 1200px, 0) scale(0.8);    /* ✅ FIXED: Pixel-based */
+        transform: translate3d(1200px, 1200px, 0) scale(0.8);
         opacity: 0;
       }
     }
 
     @keyframes sweepOrb2 {
       0% {
-        transform: translate3d(1200px, 1200px, 0) scale(0.7);   /* ✅ FIXED: Pixel-based */
+        transform: translate3d(1200px, 1200px, 0) scale(0.7);
         opacity: 0;
       }
       15% {
         opacity: 1;
       }
       50% {
-        transform: translate3d(-200px, -200px, 0) scale(1.3);   /* ✅ FIXED: Pixel-based */
+        transform: translate3d(-200px, -200px, 0) scale(1.3);
         opacity: 1;
       }
       85% {
         opacity: 1;
       }
       100% {
-        transform: translate3d(-1000px, -1000px, 0) scale(0.7); /* ✅ FIXED: Pixel-based */
+        transform: translate3d(-1000px, -1000px, 0) scale(0.7);
         opacity: 0;
       }
     }
 
     @keyframes sweepOrb3 {
       0% {
-        transform: translate3d(500px, -1000px, 0) scale(0.8);   /* ✅ FIXED: Pixel-based */
+        transform: translate3d(500px, -1000px, 0) scale(0.8);
         opacity: 0;
       }
       15% {
         opacity: 1;
       }
       50% {
-        transform: translate3d(0px, 500px, 0) scale(1.1);       /* ✅ FIXED: Pixel-based */
+        transform: translate3d(0px, 500px, 0) scale(1.1);
         opacity: 1;
       }
       85% {
         opacity: 1;
       }
       100% {
-        transform: translate3d(-500px, 1200px, 0) scale(0.8);   /* ✅ FIXED: Pixel-based */
+        transform: translate3d(-500px, 1200px, 0) scale(0.8);
         opacity: 0;
       }
     }
 
     @keyframes sweepBeam {
       0% {
-        transform: translateX(-500px) rotate(25deg);  /* ✅ FIXED: Transform instead of left */
+        transform: translateX(-500px) rotate(25deg);
         opacity: 0;
       }
       15% {
         opacity: 1;
       }
       50% {
-        transform: translateX(calc(50vw - 250px)) rotate(25deg);  /* ✅ FIXED: Viewport-based */
+        transform: translateX(calc(50vw - 250px)) rotate(25deg);
         opacity: 1;
       }
       85% {
         opacity: 1;
       }
       100% {
-        transform: translateX(calc(100vw + 500px)) rotate(25deg);  /* ✅ FIXED: Viewport-based */
+        transform: translateX(calc(100vw + 500px)) rotate(25deg);
         opacity: 0;
       }
     }
@@ -308,133 +226,10 @@ function initPremiumDepthShader() {
     }
   `;
   document.head.appendChild(styleSheet);
-
-  console.log('✨ "Premium Netflix Effect" ACTIVE');
-  console.log('🎨 4 elements: 1000px + 900px + 800px orbs + 500px light beam');
-  console.log('💥 Result: 0.26 CLS, 20-30 FPS on mid-tier devices');
-  console.log('😭 Users: "The page is completely frozen..."');
 }
 
-// ✅ FIXED VERSION (for live demo - keep commented):
-//
-// function initPremiumDepthShader() {
-//   const heroSection = document.querySelector('.hero');
-//   if (!heroSection) return;
-//
-//   // THE COMPROMISE: 2 orbs instead of 4, lighter blur, fixed positioning
-//
-//   // Orb 1: Reduced golden orb
-//   const orb1 = document.createElement('div');
-//   orb1.className = 'premium-orb-1';
-//   orb1.style.cssText = `
-//     position: fixed;              /* ← FIX: Prevents CLS */
-//     width: 600px;                 /* ← FIX: Smaller (was 1000px) */
-//     height: 600px;
-//     top: -100px;                  /* ← FIX: Fixed pixels (not percentage) */
-//     left: -100px;
-//     z-index: 5;
-//     pointer-events: none;
-//     background: radial-gradient(circle, rgba(255, 200, 100, 0.4) 0%, transparent 70%);
-//     border-radius: 50%;
-//     filter: blur(35px);           /* ← FIX: Lighter blur (was 80px) */
-//     animation: orbit1 12s ease-in-out infinite;
-//     will-change: transform;
-//     mix-blend-mode: hard-light;
-//     contain: layout style paint;  /* ← FIX: Isolate layout impact */
-//   `;
-//
-//   // Orb 2: Reduced peachy orb
-//   const orb2 = document.createElement('div');
-//   orb2.className = 'premium-orb-2';
-//   orb2.style.cssText = `
-//     position: fixed;              /* ← FIX: Prevents CLS */
-//     width: 500px;                 /* ← FIX: Smaller (was 900px) */
-//     height: 500px;
-//     bottom: -100px;               /* ← FIX: Fixed pixels */
-//     right: -100px;
-//     z-index: 5;
-//     pointer-events: none;
-//     background: radial-gradient(circle, rgba(255, 140, 120, 0.35) 0%, transparent 70%);
-//     border-radius: 50%;
-//     filter: blur(30px);           /* ← FIX: Lighter blur (was 70px) */
-//     animation: orbit2 10s ease-in-out infinite;
-//     will-change: transform;
-//     mix-blend-mode: hard-light;
-//     contain: layout style paint;  /* ← FIX: Isolate layout impact */
-//   `;
-//
-//   // ← REMOVED: Light beam (worst offender)
-//   // ← REMOVED: Orb 3 (blue accent)
-//   // RESULT: Keep premium feel, but performant
-//
-//   heroSection.appendChild(orb1);
-//   heroSection.appendChild(orb2);
-//
-//   // Simpler animations (use same keyframes, just fewer orbs)
-//   const styleSheet = document.createElement('style');
-//   styleSheet.textContent = `
-//     @keyframes orbit1 {
-//       0%, 100% { transform: translate(0, 0) scale(1); }
-//       50% { transform: translate(10%, 10%) scale(1.1); }
-//     }
-//     @keyframes orbit2 {
-//       0%, 100% { transform: translate(0, 0) scale(1); }
-//       50% { transform: translate(-10%, -10%) scale(1.1); }
-//     }
-//   `;
-//   document.head.appendChild(styleSheet);
-//
-//   console.log('✨ Optimized orbs: 2 instead of 4, lighter blur, fixed positioning');
-//   console.log('📊 Result: CLS 0.26 → 0.04, FPS 20-30 → 60');
-// }
-
-// ==============================================================================
-// ❌ PROBLEM 4: The Hover Effect Disaster
-// ==============================================================================
-//
-// THE BACKSTORY:
-// 3 days before launch, Friday afternoon
-//
-// PM (on Slack): "Hey @dev-team, quick request before we ship Monday.
-//                 When users hover over a product, can we dim the others?
-//                 Creates nice visual focus. Should be easy, right?"
-//
-// Developer (tired, rushing): "Sure, I'll add it before EOD."
-//
-// [30 minutes of coding...]
-//
-// Developer: "Done! Added mouseenter listener, fetches product details,
-//             dims other products. Tested on my machine, works great!"
-//
-// [Ships to production Monday...]
-//
-// [Week 2 post-launch, Twitter explodes...]
-//
-// User: "Why does @Atelier feel so laggy? Hovering over products is painful."
-//
-// Performance Consultant (DevTools Performance Panel):
-// "Every hover triggers:
-//  - Unthrottled API fetch (network spam)
-//  - querySelectorAll('.product-card') - queries entire DOM
-//  - DOM manipulation forcing layout recalculation
-//  Result: INP 620ms. Target is <200ms. Users feel frozen interface."
-//
-// THE PROBLEMS:
-// 1. No debouncing - fetch fires on EVERY mouseenter
-// 2. No selector caching - querySelectorAll on every hover
-// 3. No batching - each style change forces recalculation
-// 4. Complex DOM creation on every hover
-//
-// THE FIX (commented below):
-// - Cache selectors ONCE
-// - Debounce the hover event
-// - Batch DOM operations with requestAnimationFrame
-// ==============================================================================
-
 export function initProductHover() {
-  // ❌ CURRENT: Expensive hover handler (INP: 620ms)
   document.querySelectorAll('.product-card').forEach((card, index) => {
-    // Track hover state to prevent race conditions
     let isHovering = false;
 
     card.addEventListener('mouseenter', async () => {
@@ -443,24 +238,18 @@ export function initProductHover() {
       try {
         const productId = index + 1;
 
-        // ❌ BAD: Unthrottled fetch on EVERY hover
         const response = await fetch(`/api/products/${productId}`);
         const product = await response.json();
 
-        // ❌ RACE CONDITION FIX: Check if still hovering after fetch completes
-        // If user left during the 400ms fetch, don't create the icon
         if (!isHovering) {
-          console.log('⚠️ Race condition avoided: User left before fetch completed');
           return;
         }
 
-        // ❌ BAD: Heavy DOM queries on every hover
         const allCards = document.querySelectorAll('.product-card');
         const prices = document.querySelectorAll('.product-price');
         const names = document.querySelectorAll('.product-name');
 
-        // ❌ BAD: Create wishlist icon AFTER API fetch (user might miss it!)
-        // Real-world impact: User hovers briefly, icon appears 340ms+ later, user already moved on
+        // Create wishlist icon
         const wishlistIcon = document.createElement('div');
         wishlistIcon.className = 'wishlist-icon';
         wishlistIcon.innerHTML = `
@@ -469,41 +258,32 @@ export function initProductHover() {
           </svg>
         `;
 
-        // ❌ PROBLEM: Icon appears with delay - user might not see it
         setTimeout(() => {
-          // Check again before adding class (user might have left during setTimeout)
           if (isHovering) {
             wishlistIcon.classList.add('loaded');
           }
-        }, 50); // Small delay to show the fade-in animation
+        }, 50);
 
         card.appendChild(wishlistIcon);
 
-        // Add click handler for wishlist
         wishlistIcon.addEventListener('click', (e) => {
           e.stopPropagation();
           wishlistIcon.classList.toggle('active');
-          console.log('💝 Wishlist toggled:', product.name);
         });
 
-        // ❌ BAD: Dim others (forces layout recalculation)
         allCards.forEach(otherCard => {
           if (otherCard !== card) {
             otherCard.style.opacity = '0.5';
             otherCard.style.filter = 'grayscale(50%)';
           }
         });
-
-        console.log('💫 Hover fetch:', product.name, '(no debounce!)');
       } catch (error) {
-        console.error('Failed to load product details:', error);
       }
     });
 
     card.addEventListener('mouseleave', () => {
       isHovering = false;
 
-      // ❌ BAD: More DOM queries on cleanup
       const wishlistIcon = card.querySelector('.wishlist-icon');
       if (wishlistIcon) wishlistIcon.remove();
 
@@ -515,77 +295,3 @@ export function initProductHover() {
     });
   });
 }
-
-// ✅ FIXED VERSION (for live demo - keep commented):
-//
-// NOTE: The broken version above has a race condition fix (isHovering flag)
-// to prevent orphaned icons. However, this is a BAND-AID! The real problem
-// is fetching data on hover. The proper fix eliminates the fetch entirely.
-//
-// ARCHITECTURAL NOTE:
-// The REAL fix requires changes at multiple levels:
-//
-// 1. API ARCHITECTURE FIX (Backend):
-//    - Include wishlist status in initial /api/products response
-//    - Single request loads ALL product data upfront
-//    - No per-product API calls needed
-//
-//    Current (BAD):
-//    GET /api/products → [{id, name, price, image}, ...]
-//    GET /api/products/1 → {id, name, price, image, alt, inWishlist}  ← Extra call per hover!
-//
-//    Fixed (GOOD):
-//    GET /api/products → [{id, name, price, image, alt, inWishlist}, ...]
-//    ↑ One request, all data included, no hover fetches needed
-//
-// 2. FRONTEND FIX (productRenderer.js):
-//    - Render wishlist icon immediately with product card
-//    - Use data already available from initial fetch
-//    - No hover-triggered API calls
-//
-// export function initProductHover() {
-//   // ✅ FIX: Cache selectors ONCE (not on every hover)
-//   const allCards = document.querySelectorAll('.product-card');
-//   let hoverTimeout;
-//
-//   allCards.forEach((card, index) => {
-//     // ✅ FIX: Wishlist icon already rendered by productRenderer.js
-//     //         No need to fetch or create on hover - it's already there!
-//
-//     card.addEventListener('mouseenter', () => {
-//       // ✅ FIX: Debounce to prevent spam
-//       clearTimeout(hoverTimeout);
-//       hoverTimeout = setTimeout(() => {
-//         // ✅ FIX: Batch DOM operations with rAF
-//         requestAnimationFrame(() => {
-//           // Dim others (batch style changes)
-//           allCards.forEach(otherCard => {
-//             if (otherCard !== card) {
-//               otherCard.style.opacity = '0.5';
-//             }
-//           });
-//         });
-//       }, 100);  // ← Debounce 100ms
-//     });
-//
-//     card.addEventListener('mouseleave', () => {
-//       clearTimeout(hoverTimeout);
-//
-//       // ✅ FIX: Batch cleanup
-//       requestAnimationFrame(() => {
-//         allCards.forEach(otherCard => {
-//           otherCard.style.opacity = '1';
-//         });
-//       });
-//     });
-//   });
-//
-//   console.log('✨ Optimized hover: No API calls, instant wishlist icon, debounced, batched DOM ops');
-//   console.log('📊 Result: INP 620ms → 60ms');
-// }
-//
-// ✅ ADDITIONAL FIX in productRenderer.js (see productRenderer.js:165-224):
-//    - Render wishlist icon immediately during initial product render
-//    - Use wishlist status from /api/products response (backend fix required)
-//    - Icon appears instantly on first hover, no fetch delay
-//    - Result: Feature discoverable immediately, not after 340ms+ delay
