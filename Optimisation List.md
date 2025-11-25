@@ -1,29 +1,29 @@
-# Performance Optimization Homework
+# Performance Optimisation Homework
 
 **Context:** The codebase has been cleaned up to look like a real production e-commerce site. All teaching comments have been removed, and performance issues are now **hidden** in the code - just like you'd find in the real world.
 
-**Your task:** We've fixed 3 major problems (hero images, marketing banner, animated orbs). Below are **25 additional optimization opportunities** grouped by Core Web Vital metric.
+**Your task:** We've fixed 3 major problems (hero images, marketing banner, animated orbs). Below are **25 additional optimisation opportunities** grouped by Core Web Vital metric.
 
 ---
 
 ## 📊 Issues Organized by Core Web Vital
 
-### 🟦 LCP (Largest Contentful Paint) Optimizations
+### 🟦 LCP (Largest Contentful Paint) optimisations
 **Target: < 2.5s | Measures: Loading performance of main content**
 
 Issues affecting LCP: **#1, #2, #3, #4, #5, #8, #9, #16**
 
-### 🟩 CLS (Cumulative Layout Shift) Optimizations
+### 🟩 CLS (Cumulative Layout Shift) optimisations
 **Target: < 0.1 | Measures: Visual stability during load**
 
 Issues affecting CLS: **#1, #2, #15, #18, #22**
 
-### 🟨 INP (Interaction to Next Paint) Optimizations
+### 🟨 INP (Interaction to Next Paint) optimisations
 **Target: < 200ms | Measures: Responsiveness to user interactions**
 
 Issues affecting INP: **#6, #10, #11, #12, #13, #14, #15, #17, #24**
 
-### 🟧 FCP (First Contentful Paint) Optimizations
+### 🟧 FCP (First Contentful Paint) optimisations
 **Target: < 1.8s | Measures: Time to first visible content**
 
 Issues affecting FCP: **#1, #3, #4, #5, #6, #7, #9, #12, #15, #17, #19, #20**
@@ -37,7 +37,7 @@ Issues in this category: **#9, #10, #19, #20, #21, #23, #25**
 
 ## 🟦 LCP (Largest Contentful Paint) - 8 Issues
 
-Your LCP is currently **1.30s** on the demo site. These optimizations can improve it further.
+Your LCP is currently **1.30s** on the demo site. These optimisations can improve it further.
 
 ---
 
@@ -241,7 +241,7 @@ function createProductCard(product, index) {
 
 ## 🟩 CLS (Cumulative Layout Shift) - 5 Issues
 
-Your CLS is currently **0.05** on mobile. These optimizations can get it to 0.
+Your CLS is currently **0.05** on mobile. These optimisations can get it to 0.
 
 ---
 
@@ -327,7 +327,7 @@ background: rgba(255, 255, 255, 0.98);
 
 ## 🟨 INP (Interaction to Next Paint) - 9 Issues
 
-Your INP is currently good, but these optimizations prevent regressions.
+Your INP is currently good, but these optimisations prevent regressions.
 
 **Note:** Problem #5 (Analytics Blocking) demonstrates a critical INP issue - synchronous analytics in event handlers causing 350ms delays. See `PROJECT_README.md` Problem #5 and `PRESENTATION_SLIDES.md` for the full fix using `setTimeout(0)` + `sendBeacon()`.
 
@@ -611,7 +611,7 @@ import { onCLS, onFCP, onINP, onLCP, onTTFB } from './vendor/web-vitals.attribut
 
 ---
 
-### #19. No Build Process - Manual Optimization
+### #19. No Build Process - Manual optimisation
 
 **Metric Impact:** FCP (-100-300ms), Payload (-20KB)
 **Difficulty:** Medium
@@ -623,7 +623,7 @@ import { onCLS, onFCP, onINP, onLCP, onTTFB } from './vendor/web-vitals.attribut
 - ~20KB savings possible (20% of total CSS/JS)
 
 **Your Task:**
-Set up Vite for build optimization:
+Set up Vite for build optimisation:
 ```bash
 npm install --save-dev vite
 ```
@@ -836,7 +836,7 @@ Focus on **INP** and responsiveness:
 - #16 Preload first product (Easy)
 - #17 Lazy-load footer (Easy)
 
-### Week 3 - Advanced Optimizations
+### Week 3 - Advanced optimisations
 Tackle **Medium difficulty**, high impact:
 - #1 Self-host Google Fonts (Medium - big impact)
 - #3 Inline critical CSS (Medium - teaches critical rendering path)
@@ -855,7 +855,7 @@ Build process and advanced patterns:
 
 ## 💡 EXPECTED TOTAL IMPACT
 
-If you implement **ALL 25 optimizations**, you could achieve:
+If you implement **ALL 25 optimisations**, you could achieve:
 
 ### Core Web Vitals
 - **LCP:** 1.30s → 0.5-0.8s (improvement: -500ms to -1.5s)
