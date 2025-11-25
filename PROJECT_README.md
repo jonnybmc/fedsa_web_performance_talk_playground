@@ -384,27 +384,3 @@ All metrics include attribution data (element responsible, event target, etc.) f
 **Conclusion:** Performance is a feature. Every design decision has performance implications.
 
 ---
-
-## Contributing
-
-Performance optimization is ongoing. See [HOMEWORK_OPTIMIZATIONS.md](./HOMEWORK_OPTIMIZATIONS.md) for the full list of technical debt and optimization opportunities.
-
-**Priority order:**
-1. Week 1: Quick wins (LCP improvements)
-2. Week 2: INP & interaction performance
-3. Week 3: Advanced optimizations (fonts, critical CSS)
-4. Week 4: Modern tooling (build process, service worker)
-
----
-
-## License
-
-MIT License - Educational/demonstration purposes
-
----
-
-## Contact
-
-For questions about this implementation or performance optimization strategies for African markets, please open an issue.
-
-**Performance matters. Every millisecond counts.** ⚡
