@@ -350,7 +350,7 @@ Delay GA until after page is interactive:
 window.addEventListener('load', () => {
   setTimeout(() => {
     const script = document.createElement('script');
-    script.src = 'https://www.googletagmanager.com/gtag/js?id=G-7012WQ517Q';
+    script.src = 'https://www.googletagmanager.com/gtag/js?id={ENTER_YOUR_OWN_MEASUREMENT_ID}';
     script.async = true;
     document.head.appendChild(script);
   }, 2000);
