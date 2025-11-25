@@ -232,21 +232,22 @@ h1, h2, h3, h4 {
   }
 }
  </style>
-
-  <!-- Google Analytics 4 (GA4) - Real User Monitoring -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7012WQ517Q"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-7012WQ517Q', {
-      send_page_view: true,
-      custom_map: {
-        dimension1: 'metric_rating',
-        dimension2: 'debug_target'
-      }
-    });
-  </script>
+  
+<!-- Google Analytics 4 (GA4) - Real User Monitoring -->
+<!-- Replace YOUR_GA4_MEASUREMENT_ID with your own Google Analytics 4 measurement ID -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_GA4_MEASUREMENT_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'YOUR_GA4_MEASUREMENT_ID', {
+    send_page_view: true,
+    custom_map: {
+      dimension1: 'metric_rating',
+      dimension2: 'debug_target'
+    }
+  });
+</script>
 
   <!-- Web Vitals RUM -->
   <script type="module">
