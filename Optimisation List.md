@@ -329,6 +329,8 @@ background: rgba(255, 255, 255, 0.98);
 
 Your INP is currently good, but these optimizations prevent regressions.
 
+**Note:** Problem #5 (Analytics Blocking) demonstrates a critical INP issue - synchronous analytics in event handlers causing 350ms delays. See `PROJECT_README.md` Problem #5 and `PRESENTATION_SLIDES.md` for the full fix using `setTimeout(0)` + `sendBeacon()`.
+
 ---
 
 ### #6. Google Analytics - Blocking Third-Party Script

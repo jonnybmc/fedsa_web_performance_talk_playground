@@ -1,19 +1,18 @@
 export async function renderProducts() {
   try {
-    const response = await fetch('/api/products');
+    const response = await fetch("/api/products");
     const products = await response.json();
 
-    const productGrid = document.querySelector('.product-grid');
-    productGrid.innerHTML = '';
+    const productGrid = document.querySelector(".product-grid");
+    productGrid.innerHTML = "";
 
     products.forEach((product, index) => {
       const card = createProductCard(product, index);
       productGrid.appendChild(card);
       const height = card.offsetHeight;
     });
-
   } catch (error) {
-    const productGrid = document.querySelector('.product-grid');
+    const productGrid = document.querySelector(".product-grid");
     productGrid.innerHTML = `
       <p style="color: #ef4444; text-align: center; grid-column: 1/-1;">
         Failed to load products. Please ensure the server is running on port 3000.
@@ -23,8 +22,8 @@ export async function renderProducts() {
 }
 
 function createProductCard(product) {
-  const card = document.createElement('div');
-  card.className = 'product-card';
+  const card = document.createElement("div");
+  card.className = "product-card";
 
   card.innerHTML = `
     <div class="product-image-container">
@@ -48,36 +47,41 @@ function createProductCard(product) {
     </div>
   `;
 
-  const addToCartBtn = card.querySelector('.product-cta');
+  const addToCartBtn = card.querySelector(".product-cta");
 
-  addToCartBtn.addEventListener('click', (e) => {
+  function postAnalyticsEvent(eventName, data) {
+    setTimeout(() => {
+      const start = Date.now();
+      while (Date.now() - start < 1000) {
+        // ... churning heavy encryption math ...
+      }
+
+      const payload = JSON.stringify({
+        event: eventName,
+        ...data,
+        timestamp: Date.now(),
+      });
+      fetch("/api/analytics", {
+        method: "POST",
+        body: payload,
+        headers: { "Content-Type": "application/json" },
+        keepalive: true,
+      }).catch((err) => console.warn("Analytics failed:", err));
+    }, 0);
+  }
+
+  addToCartBtn.addEventListener("click", (e) => {
     e.preventDefault();
 
-    const allButtons = document.querySelectorAll('.product-cta');
-
-    addToCartBtn.textContent = 'Adding...';
+    addToCartBtn.textContent = "Added ✓";
     addToCartBtn.disabled = true;
 
+    postAnalyticsEvent("add_to_cart", { id: product.id });
+
     setTimeout(() => {
-      addToCartBtn.textContent = 'Added ✓';
-
-      setTimeout(() => {
-        addToCartBtn.textContent = 'Add to Cart';
-        addToCartBtn.disabled = false;
-      }, 2000);
-    }, 500);
-  });
-
-  card.style.opacity = '0';
-  card.style.transform = 'translateY(20px)';
-
-  const computedStyle = window.getComputedStyle(card);
-  const opacity = computedStyle.opacity;
-
-  requestAnimationFrame(() => {
-    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    card.style.opacity = '1';
-    card.style.transform = 'translateY(0)';
+      addToCartBtn.textContent = "Add to Cart";
+      addToCartBtn.disabled = false;
+    }, 2500);
   });
 
   return card;
